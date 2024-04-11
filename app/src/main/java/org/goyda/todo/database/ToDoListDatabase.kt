@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(ToDoListDataEntity::class), version = 1 )
-abstract class ToDoListDatabase : RoomDatabase(){
-
+@Database(entities = arrayOf(ToDoListDataEntity::class), version = 1)
+abstract class ToDoListDatabase : RoomDatabase()
+{
     abstract fun toDoListDao() : ToDoListDAO
 
     companion object{
@@ -25,8 +25,5 @@ abstract class ToDoListDatabase : RoomDatabase(){
             }
             return instanse
         }
-
-
     }
-
 }
