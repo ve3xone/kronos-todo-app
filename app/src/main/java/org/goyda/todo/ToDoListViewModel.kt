@@ -102,7 +102,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     fun delete(id: Long) {
-        database?.toDoListDao()?.Delete(id)
+        database?.toDoListDao()?.delete(id)
         database?.toDoListDao()?.getAll().let {
             getAllData = it as MutableList<ToDoListDataEntity>
             getPreviousList()
