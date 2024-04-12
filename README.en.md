@@ -19,7 +19,7 @@ This is a simple TODO list app developed in Kotlin that utilizes the Room Databa
 - Store tasks locally using the Room Database for persistence.
 - Receive notifications to remind you of upcoming tasks.
 
-## Задачи на будущее
+## Challenges for the future
 
 - [x] Basic functionality with tasks.
 - [ ] Add a design.
