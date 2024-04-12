@@ -22,7 +22,6 @@ class ListAdapter(private val listData: List<ToDoListData>, private val onClick:
                 R.layout.item_tolist, parent, false)
         return ListViewHolder(binding, onClick)
     }
-
 }
 
 class ListViewHolder(val binding: ItemTolistBinding, val onClick: OnItemClick) : RecyclerView.ViewHolder(binding.root),

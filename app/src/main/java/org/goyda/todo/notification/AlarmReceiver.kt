@@ -15,8 +15,8 @@ import org.goyda.todo.R
 import org.goyda.todo.database.ToDoListDatabase
 import java.util.*
 
-class AlarmReceiver : BroadcastReceiver() {
-
+class AlarmReceiver : BroadcastReceiver()
+{
     private val GROUP_MESSAGE: String = "TODOLIST"
 
     var toDoListDatabase: ToDoListDatabase? = null

@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             dpd.show()
 
         }
+
         etTime.setOnClickListener {
             val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
@@ -125,12 +126,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-
     override fun onItemClick(v: View, position: Int) {
 
 
@@ -150,6 +145,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         }.show()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onStop() {
