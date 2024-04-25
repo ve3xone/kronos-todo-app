@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         viewModel.getPreviousList()
 
-        viewModel.toDoList.observe(this, androidx.lifecycle.Observer {
+        viewModel.toDoList.observe(this, androidx.lifecycle.Observer { it ->
             //list.addAll(it)
             if (it == null)
                 return@Observer
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 tempList.add(
                     ToDoListData(
                         title = it.title,
+                        desc = it.desc,
                         date = it.date,
                         time = it.time,
                         indexDb = it.id,
@@ -133,6 +134,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             message = list.get(position).title
             positiveButton("Edit") {
                 viewModel.title.set(list.get(position).title)
+                viewModel.desc.set(list.get(position).desc)
                 viewModel.date.set(list.get(position).date)
                 viewModel.time.set(list.get(position).time)
                 viewModel.position = position

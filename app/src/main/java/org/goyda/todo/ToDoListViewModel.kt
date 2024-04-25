@@ -35,6 +35,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     var title = ObservableField<String>("")
+    var desc = ObservableField<String>("")
     var date = ObservableField<String>("")
     var time = ObservableField<String>("")
 
@@ -52,9 +53,10 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     fun click(v: View) {
 
         Log.d("Click", "click")
-        if (title.get().toString().isNotBlank() && date.get().toString().isNotBlank() && time.get().toString().isNotBlank()) {
-            addData(title.get().toString(), date.get().toString(), time.get().toString(), id = index)
+        if (title.get().toString().isNotBlank() && desc.get().toString().isNotBlank() && date.get().toString().isNotBlank() && time.get().toString().isNotBlank()) {
+            addData(title.get().toString(), desc.get().toString(), date.get().toString(), time.get().toString(), id = index)
             title.set("")
+            desc.set("")
             date.set("")
             time.set("")
         }else{
@@ -64,15 +66,15 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     @WorkerThread
-    private fun addData(title: String, date: String, time: String, id: Long) {
+    private fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
         if (position != -1)
         {
-            database?.toDoListDao()?.update(title = title, date = date, time = time, id = id)
+            database?.toDoListDao()?.update(title = title, desc = desc, date = date, time = time, id = id)
         }
         else
         {
-            val newId = database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time, isShow = 0))
+            val newId = database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, desc = desc, date = date, time = time, isShow = 0))
 
             val cal : Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
 
@@ -86,7 +88,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
 
             Log.d("Alarm Title","$month , $date : ${cal.time}")
             newId?.let {
-                setAlarm(cal, 0, it, title,hour,minute)
+                setAlarm(cal, 0, it, title,desc,hour,minute)
             }
         }
 
@@ -109,16 +111,21 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, hour:Int,minute:Int)
+    fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, desc: String, hour:Int,minute:Int)
     {
         val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val time = "%02d".format(hour) + ":" + "%02d".format(minute)
 
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.putExtra("INTENT_NOTIFY", true)
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
-        intent.putExtra("title", title)
-        intent.putExtra("date","Time-> $hour:$minute")
+        //intent.putExtra("title", title)
+        intent.putExtra("title", "Задача: $title")
+        //intent.putExtra("desc", desc)
+        //intent.putExtra("date","Time-> $hour:$minute")
+        intent.putExtra("date","Уведомление по времени: $time\n $desc")
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0)
