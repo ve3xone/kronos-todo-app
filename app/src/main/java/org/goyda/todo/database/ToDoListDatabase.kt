@@ -18,7 +18,7 @@ abstract class ToDoListDatabase : RoomDatabase()
             if (instanse == null) {
                 synchronized(ToDoListDatabase::class) {
                     instanse = Room.databaseBuilder(context.applicationContext,
-                        ToDoListDatabase::class.java, "todolistdb")
+                        ToDoListDatabase::class.java, "todo-db")
                         .allowMainThreadQueries()
                         .build()
                 }
