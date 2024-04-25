@@ -12,9 +12,10 @@ interface ToDoListDAO {
     @Insert
     fun insert(toDoListData: ToDoListDataEntity) : Long
 
-    @Query("UPDATE todolist  SET title = :title, date =:date, time = :time  where id LIKE :id")
+    @Query("UPDATE todolist  SET title = :title, desc = :desc, date = :date, time = :time  where id LIKE :id")
     fun update(
         title: String,
+        desc: String,
         date: String,
         time: String,
         id: Long

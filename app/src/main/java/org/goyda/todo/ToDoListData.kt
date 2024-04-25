@@ -1,9 +1,10 @@
 package org.goyda.todo
 
 class ToDoListData(
+    var indexDb: Long = 0,
     val title: String = "",
+    var desc: String = "",
     val date: String = "",
     val time: String = "",
-    var indexDb: Long = 0,
     val isShow : Int = 0
 )
