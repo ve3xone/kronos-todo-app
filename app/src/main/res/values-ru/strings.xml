@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Задачник</string>
+    <string name="button">Кнопка</string>
+    <string name="add_title">Введите название задачи</string>
+    <string name="add_desc">Введите описание</string>
+    <string name="add_date">Выберите дату</string>
+    <string name="add_time">Выберите время</string>
+    <string name="add">Добавить</string>
+</resources>
