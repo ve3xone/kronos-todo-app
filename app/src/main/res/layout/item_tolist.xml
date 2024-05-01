@@ -47,19 +47,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     app:layout_constraintHorizontal_bias="0.8"
                     android:layout_marginTop="8dp"
-                    android:id="@+id/tvDesc"
-                    />
+                    android:id="@+id/tvDesc" />
 
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:textSize="15sp"
                     tools:text="Date"
                     android:text="@{toDoList.date}"
                     app:layout_constraintTop_toBottomOf="@+id/tvDesc"
-                    app:layout_constraintHorizontal_bias="0.8"
                     android:layout_marginTop="8dp"
                     android:id="@+id/tvDate" />
 
@@ -70,11 +67,12 @@
                     android:textSize="15sp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTime"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDate"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvDate"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginStart="14dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
