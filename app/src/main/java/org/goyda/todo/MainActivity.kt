@@ -40,7 +40,11 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ToDoListViewModel::class.java)
 
-        rvTodoList.layoutManager = LinearLayoutManager(this)
+        //Инверсированый список задач
+        rvTodoList.layoutManager = LinearLayoutManager(this).apply {
+            reverseLayout = true
+            stackFromEnd = true
+        }
         rvTodoList.adapter = listAdapter
         binding.vieModel = viewModel
 
