@@ -132,8 +132,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     override fun onItemClick(v: View, position: Int) {
-
-
         alert {
             message = list.get(position).title
             positiveButton("Edit") {
@@ -148,9 +146,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             negativeButton("Delete") {
                 viewModel.delete(list.get(position).indexDb)
             }
-
         }.show()
-
     }
 
     override fun onResume() {
