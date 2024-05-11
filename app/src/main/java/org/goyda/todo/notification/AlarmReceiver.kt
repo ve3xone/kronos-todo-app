@@ -56,14 +56,15 @@ class AlarmReceiver : BroadcastReceiver()
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .build()
 
+        if (toDoListDatabase?.toDoListDao()?.get(dbId) != null){
+            notificationManager.notify(getNumber(), notification)
+            toDoListDatabase?.toDoListDao()?.isShownUpdate(id = dbId, isShow = 1)
+            val list = toDoListDatabase?.toDoListDao()?.get(dbId)
+            Log.d("IsRead","isRead "+list?.isShow)
+        }
 
-        notificationManager.notify(getNumber(), notification)
 
-        toDoListDatabase?.toDoListDao()?.isShownUpdate(id = dbId, isShow = 1)
 
-        val list = toDoListDatabase?.toDoListDao()?.get(dbId)
-
-        Log.d("IsRead","isRead "+list?.isShow)
 
     }
 
