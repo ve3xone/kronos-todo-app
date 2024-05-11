@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TODO</string>
+    <string name="app_name">Kronos</string>
     <string name="button">Button</string>
     <string name="add_title">Enter the name of the task</string>
     <string name="add_desc">Enter the description</string>
     <string name="add_date">Select the date</string>
     <string name="add_time">Choose the time</string>
     <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>
