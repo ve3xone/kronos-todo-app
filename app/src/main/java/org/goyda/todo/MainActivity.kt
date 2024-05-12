@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -23,11 +25,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.goyda.todo.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_item.view.*
+import kotlinx.android.synthetic.main.settings.view.*
 import org.jetbrains.anko.alert
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.Activity
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
+import java.io.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 
 class MainActivity : AppCompatActivity(), OnItemClick {
+
+    private val EXPORT_DB_REQUEST_CODE = 1001
+    private val IMPORT_DB_REQUEST_CODE = 1002
+    private val EXPORT_ICS_REQUEST_CODE = 1003
+    private val IMPORT_ICS_REQUEST_CODE = 1004
 
     private val list = mutableListOf<ToDoListData>()
 
@@ -56,6 +72,12 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
             dialogAddAndEditItem("","","","", false)
+        }
+
+        // Проверяем, было ли уже дано разрешение на уведомления
+        if (!isNotificationPermissionGranted()) {
+            // Если разрешение не было дано, запрашиваем его
+            requestNotificationPermission()
         }
 
         //Инверсированый список задач
@@ -106,12 +128,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             }
             viewModel.position = -1
         })
-
-        // Проверяем, было ли уже дано разрешение на уведомления
-        if (!isNotificationPermissionGranted()) {
-            // Если разрешение не было дано, запрашиваем его
-            requestNotificationPermission()
-        }
     }
 
     // Для первого запуска приложения
@@ -254,6 +270,229 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.bCancel.setOnClickListener { dialog.dismiss() }
     }
 
+    private fun dialogSettings(){
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.settings, null)
+
+        builder.setView(dialogView)
+
+        val dialog = builder.create()
+        dialog.show()
+
+        dialogView.bExportDB.setOnClickListener {
+            val timeStamp = SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault()).format(Date())
+            val exportIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "application/zip"
+                putExtra(Intent.EXTRA_TITLE, "krokus-backup_$timeStamp.zip")
+            }
+            startActivityForResult(exportIntent, EXPORT_DB_REQUEST_CODE)
+        }
+
+        dialogView.bImportDB.setOnClickListener {
+            val importIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "application/zip"
+            }
+            startActivityForResult(importIntent, IMPORT_DB_REQUEST_CODE)
+        }
+
+        //tasks.ics: Выбирите папку и нажмите использовать в неё создаться файл с именем tasks.ics и его можно будет использовать в календаре
+        dialogView.bExportICS.setOnClickListener{
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            startActivityForResult(intent, EXPORT_ICS_REQUEST_CODE)
+        }
+
+        dialogView.bImportICS.setOnClickListener{
+            // Вызываем Intent для выбора файла для импорта
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.type = "text/calendar"
+            startActivityForResult(intent, IMPORT_ICS_REQUEST_CODE)
+        }
+
+        dialogView.cancel.setOnClickListener { dialog.dismiss() }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == EXPORT_DB_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            val sourceDir = "/data/data/org.goyda.todo/databases"
+            val outputFile = uri?.let { contentResolver.openFileDescriptor(it, "w")?.fileDescriptor }
+            zipFiles(sourceDir, outputFile)
+        }
+
+        if (requestCode == IMPORT_DB_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            val zipFile = uri?.let { contentResolver.openInputStream(it) }
+            val outputDir = "/data/data/org.goyda.todo/databases"
+            unzipFiles(zipFile, outputDir)
+            //Перезапуск RecyclerView
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
+
+        if (requestCode == EXPORT_ICS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                val documentFile = DocumentFile.fromTreeUri(this, uri)
+                if (documentFile != null) {
+                    exportTasksToICS(list, documentFile)
+                }
+            }
+        }
+
+        if (requestCode == IMPORT_ICS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                importTasksFromICS(uri)
+            }
+        }
+    }
+
+    private val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault())
+    private val inputDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    private val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    private fun formatDateAndTime(date: String, time: String): String {
+        val dateTime = "$date $time"
+        val parsedDate = inputDateFormat.parse(dateTime)
+        return dateFormat.format(parsedDate)
+    }
+
+    private fun importTasksFromICS(fileUri: Uri) {
+        val inputStream = contentResolver.openInputStream(fileUri)
+        inputStream?.use { stream ->
+            val icsContent = stream.bufferedReader().use { it.readText() }
+            parseICSContent(icsContent)
+            // Далее можно использовать список задач для отображения или сохранения в базу данных
+        }
+    }
+
+    private fun parseICSContent(icsContent: String) {
+        val lines = icsContent.lines()
+
+        var title = ""
+        var desc = ""
+        var date = ""
+        var time = ""
+
+        lines.forEach { line ->
+            when {
+                line.startsWith("DTSTART;") -> {
+                    val startDateString = line.substringAfter("DTSTART;")
+                    val dateStringWithoutTZID = startDateString.substringAfterLast(":")
+                    val parsedDateTime = dateFormat.parse(dateStringWithoutTZID)
+                    val formattedDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(dateStringWithoutTZID)
+                    viewModel.hour = parsedDateTime.hours
+                    viewModel.minute = parsedDateTime.minutes
+                    viewModel.month = parsedDateTime.month
+                    viewModel.day = parsedDateTime.date
+                    viewModel.year = dateStringWithoutTZID.substring(0,4).toInt()
+                    date = outputDateFormat.format(parsedDateTime)
+                    time = outputTimeFormat.format(parsedDateTime)
+                }
+                line.startsWith("SUMMARY:") -> {
+                    title = line.substringAfter("SUMMARY:")
+                }
+                line.startsWith("DESCRIPTION:") -> {
+                    desc = line.substringAfter("DESCRIPTION:")
+                }
+                line.startsWith("END:VEVENT") -> {
+                    if (title != "" && desc != "") {
+                        viewModel.addData(title,desc,date,time,viewModel.index)
+                    }
+                    // Сбрасываем значения
+                    title = ""
+                    date = ""
+                    time = ""
+                    desc = ""
+
+                }
+//                line.isBlank() -> {
+//
+//                }
+            }
+        }
+    }
+
+    private fun exportTasksToICS(tasks: List<ToDoListData>, directory: DocumentFile) {
+        val timeStamp = SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault()).format(Date())
+        val outputFile = directory.createFile("text/calendar", "tasks_$timeStamp.ics")
+        val outputStream = outputFile?.uri?.let { contentResolver.openOutputStream(it) }
+        outputStream.use { stream ->
+            val icsContent = generateICSContent(tasks)
+            stream?.write(icsContent.toByteArray())
+        }
+    }
+
+    private fun generateICSContent(tasks: List<ToDoListData>): String {
+        val icsBuilder = StringBuilder()
+        icsBuilder.appendln("BEGIN:VCALENDAR")
+        icsBuilder.appendln("VERSION:2.0")
+        icsBuilder.appendln("PRODID:-//My App//My App 1.0//EN")
+
+        val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault())
+
+        tasks.forEach { task ->
+            icsBuilder.appendln("BEGIN:VEVENT")
+            icsBuilder.appendln("UID:${task.indexDb}")
+            icsBuilder.appendln("SUMMARY:${task.title}")
+            icsBuilder.appendln("DESCRIPTION:${task.desc}")
+            val formattedDateTime = formatDateAndTime(task.date, task.time)
+            icsBuilder.appendln("DTSTART;:$formattedDateTime")
+            //заглушка
+            icsBuilder.appendln("DTEND;:$formattedDateTime")
+            icsBuilder.appendln("END:VEVENT")
+        }
+
+        icsBuilder.appendln("END:VCALENDAR")
+        return icsBuilder.toString()
+    }
+
+    private fun zipFiles(sourceDir: String, outputFile: FileDescriptor?) {
+        val sourceDirFile = File(sourceDir)
+        if (!sourceDirFile.isDirectory) return
+
+        val files = sourceDirFile.listFiles() ?: return
+
+        val outputStream = FileOutputStream(outputFile)
+
+        ZipOutputStream(outputStream).use { zipOutputStream ->
+            files.forEach { file ->
+                FileInputStream(file).use { fileInputStream ->
+                    zipOutputStream.putNextEntry(ZipEntry(file.name))
+                    fileInputStream.copyTo(zipOutputStream)
+                    zipOutputStream.closeEntry()
+                }
+            }
+        }
+        Toast.makeText(this, "Files zipped successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun unzipFiles(zipFile: InputStream?, outputDir: String) {
+        if (zipFile == null) return
+
+        val buffer = ByteArray(1024)
+
+        ZipInputStream(zipFile).use { zipInputStream ->
+            var zipEntry = zipInputStream.nextEntry
+            while (zipEntry != null) {
+                val newFile = File(outputDir, zipEntry.name)
+                FileOutputStream(newFile).use { fileOutputStream ->
+                    var len: Int
+                    while (zipInputStream.read(buffer).also { len = it } > 0) {
+                        fileOutputStream.write(buffer, 0, len)
+                    }
+                }
+                zipEntry = zipInputStream.nextEntry
+            }
+        }
+        Toast.makeText(this, "Files unzipped successfully", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -263,6 +502,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         return when (item.itemId) {
             R.id.action_settings -> {
                 // Обработка нажатия на пункт меню "Settings"
+                dialogSettings()
                 true
             }
             // Добавьте обработку других пунктов меню, если необходимо
