@@ -5,16 +5,17 @@
         tools:context=".MainActivity">
 
     <item
-            android:id="@+id/switch_theme"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="switch theme"
+            android:id="@+id/action_settings"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="@string/settings"
             app:showAsAction="always">
     </item>
 
     <item
-            android:id="@+id/action_settings"
-            android:title="Settings"
-            android:fontFamily=""
-            app:showAsAction="never">
+            android:id="@+id/switch_theme"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="О приложении"
+            app:showAsAction="always">
     </item>
+
 </menu>
