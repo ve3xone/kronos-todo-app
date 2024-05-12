@@ -64,7 +64,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     @WorkerThread
-    private fun addData(title: String, desc: String, date: String, time: String, id: Long) {
+    fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
         if (position != -1)
         {
@@ -123,7 +123,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         intent.putExtra("title", "Задача: $title")
         //intent.putExtra("desc", desc)
         //intent.putExtra("date","Time-> $hour:$minute")
-        intent.putExtra("date","Уведомление по времени: $time\n $desc")
+        intent.putExtra("date","$desc")
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0)
