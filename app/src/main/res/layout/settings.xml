@@ -1,142 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
-   <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-           tools:context=".MainActivity">
 
-    <TextView
-            android:text="Тема"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            tools:layout_editor_absoluteY="19dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+ <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         tools:context=".MainActivity">
 
-    <RadioButton
-            android:text="По умолчанию как в системе"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton"
-            tools:layout_editor_absoluteY="41dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+  <TextView
+          android:text="Темы: "
+          android:layout_width="41dp"
+          android:layout_height="25dp"
+          android:id="@+id/tvTheme"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginTop="10dp" />
 
-    <RadioButton
-            android:text="Темная"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton2"
-            tools:layout_editor_absoluteY="73dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/radioButton" />
+  <RadioButton
+          android:text="По умолчанию как в системе"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/rBSystemTheme"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="10dp"
+          app:layout_constraintTop_toBottomOf="@+id/tvTheme" />
 
-    <RadioButton
-            android:text="Черная"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton3"
-            tools:layout_editor_absoluteY="105dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/radioButton2" />
+  <RadioButton
+          android:text="Темная"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/rBDark"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          app:layout_constraintTop_toBottomOf="@+id/rBSystemTheme" />
 
-    <RadioButton
-            android:text="Светлая"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton4"
-            tools:layout_editor_absoluteY="137dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/radioButton3" />
+  <RadioButton
+          android:text="Светлая"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/rBWhiteTheme"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          tools:layout_editor_absoluteY="125dp"
+          app:layout_constraintTop_toBottomOf="@+id/rBDark" />
 
-    <Button
-            android:text="Экспорт базы данных"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bExportDB"
-            tools:layout_editor_absoluteY="183dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/radioButton4" />
+  <TextView
+          android:text="Другое: "
+          android:layout_width="55dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/tvOther"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginTop="10dp"
+          app:layout_constraintTop_toBottomOf="@+id/rBWhiteTheme"/>
 
-    <Button
-            android:text="Импорт базы данных"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bImportDB"
-            tools:layout_editor_absoluteY="231dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/bExportDB" />
+  <Button
+          android:text="Экспорт базы данных"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/bExportDB"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="10dp"
+          app:layout_constraintTop_toBottomOf="@+id/tvOther" />
 
-    <Button
-            android:text="Экспорт в .ics формат"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bExportICS"
-            tools:layout_editor_absoluteY="295dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/bImportDB" />
+  <Button
+          android:text="Импорт базы данных"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/bImportDB"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          app:layout_constraintTop_toBottomOf="@+id/bExportDB" />
 
-    <Button
-            android:text="Импорт в .ics формат"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bImportICS"
-            tools:layout_editor_absoluteY="295dp"
-            tools:layout_editor_absoluteX="19dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/bExportICS" />
+  <Button
+          android:text="Экспорт в .ics формат"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/bExportICS"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          app:layout_constraintTop_toBottomOf="@+id/bImportDB" />
+
+  <Button
+          android:text="Импорт в .ics формат"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/bImportICS"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          app:layout_constraintTop_toBottomOf="@+id/bExportICS" />
 
 
-    <Button
-            android:text="@string/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cancel"
-            tools:layout_editor_absoluteY="351dp"
-            tools:layout_editor_absoluteX="21dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/bImportICS" />
+  <Button
+          android:text="@string/cancel"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:id="@+id/cancel"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          app:layout_constraintTop_toBottomOf="@+id/bImportICS" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+ </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
