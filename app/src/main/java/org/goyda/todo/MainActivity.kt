@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
+            //viewModel.clearList()
+            //viewModel.getPreviousList() // Повторная загрузка данных
             dialogAddAndEditItem("","","","", false)
         }
 
@@ -108,6 +110,17 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         binding.vieModel = viewModel
 
         viewModel.getPreviousList()
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString()
+                viewModel.filterListByTitleAndDesc(query)
+            }
+        })
 
         viewModel.toDoList.observe(this, androidx.lifecycle.Observer { it ->
             //list.addAll(it)
@@ -129,8 +142,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 )
 
             }
-
-            list.addAll(tempList)
+            //list.addAll(tempList.filter { it.isShow > 1 }?.sortedByDescending { it.isShow })
+            list.addAll(tempList.sortedBy { it.date + it.time })
+            //list.addAll(tempList)
             listAdapter.notifyDataSetChanged()
             viewModel.position = -1
 
