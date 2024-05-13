@@ -7,7 +7,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
+//import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     fun getSavedTheme(): Int {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("Theme", THEME_LIGHT) // По умолчанию используем светлую тему
+        return sharedPreferences.getInt("Theme", THEME_SYSTEM) // По умолчанию используем системную тему
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -170,9 +170,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NOTIFICATION_POLICY), 123)
-        }
+        //}
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -429,7 +429,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         inputStream?.use { stream ->
             val icsContent = stream.bufferedReader().use { it.readText() }
             parseICSContent(icsContent)
-            // Далее можно использовать список задач для отображения или сохранения в базу данных
         }
     }
 
@@ -448,14 +447,17 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     val startDateString = line.substringAfter("DTSTART;")
                     val dateStringWithoutTZID = startDateString.substringAfterLast(":")
                     val parsedDateTime = dateFormat.parse(dateStringWithoutTZID)
-                    val formattedDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(dateStringWithoutTZID)
-                    viewModel.hour = parsedDateTime.hours
-                    viewModel.minute = parsedDateTime.minutes
-                    viewModel.month = parsedDateTime.month
-                    viewModel.day = parsedDateTime.date
-                    viewModel.year = dateStringWithoutTZID.substring(0,4).toInt()
-                    date = outputDateFormat.format(parsedDateTime)
-                    time = outputTimeFormat.format(parsedDateTime)
+
+                    if (parsedDateTime != null) {
+                        viewModel.hour = parsedDateTime.hours
+                        viewModel.minute = parsedDateTime.minutes
+                        viewModel.day = parsedDateTime.date
+                        viewModel.month = parsedDateTime.month
+                        viewModel.year = dateStringWithoutTZID.substring(0,4).toInt()
+                        date = outputDateFormat.format(parsedDateTime)
+                        time = outputTimeFormat.format(parsedDateTime)
+                    }
+
                 }
                 line.startsWith("SUMMARY:") -> {
                     title = line.substringAfter("SUMMARY:").replace("\\,", ",")
@@ -465,12 +467,12 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     formatloc = line.substringAfter("LOCATION:").replace("\\,", ",")
                 }
                 line.startsWith("DESCRIPTION:") -> {
-                    val formatingdesc = line.substringAfter("DESCRIPTION:").replace("\\n", "\n")
-                                                                                   .replace("\\,", ",")
+                    val formatDesc = line.substringAfter("DESCRIPTION:").replace("\\n", "\n")
+                                                                                .replace("\\,", ",")
                     desc = if (formatloc != ""){
-                        "Где проходит: $formatloc\n\n$formatingdesc"
+                        "Где проходит: $formatloc\n\n$formatDesc"
                     } else{
-                        formatingdesc
+                        formatDesc
                     }
                     formatloc = ""
                 }
@@ -478,6 +480,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     if (title != "" && desc != "") {
                         viewModel.addData(title,desc,date,time,viewModel.index)
                     }
+
                     // Сбрасываем значения
                     title = ""
                     date = ""
@@ -485,9 +488,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     desc = ""
 
                 }
-//                line.isBlank() -> {
-//
-//                }
             }
         }
     }
