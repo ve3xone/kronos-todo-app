@@ -13,9 +13,9 @@
     <string name="settings">Настройки</string>
     <string name="back">Назад</string>
     <string name="themes">Темы:</string>
-    <string name="systemtheme">По умолчанию как в системе</string>
-    <string name="darktheme">Темная</string>
-    <string name="whitetheme">Светлая</string>
+    <string name="system_theme">По умолчанию как в системе</string>
+    <string name="dark_theme">Темная</string>
+    <string name="white_theme">Светлая</string>
     <string name="other">Другое:</string>
     <string name="export_db">Экспорт базы данных</string>
     <string name="import_db">Импорт базы данных</string>

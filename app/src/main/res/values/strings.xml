@@ -13,9 +13,9 @@
     <string name="settings">Settings</string>
     <string name="back">Back</string>
     <string name="themes">Themes:</string>
-    <string name="systemtheme">System theme</string>
-    <string name="darktheme">Dark</string>
-    <string name="whitetheme">White</string>
+    <string name="system_theme">System theme</string>
+    <string name="dark_theme">Dark</string>
+    <string name="white_theme">White</string>
     <string name="other">Other:</string>
     <string name="export_db">Exporting a database</string>
     <string name="import_db">Importing a database</string>

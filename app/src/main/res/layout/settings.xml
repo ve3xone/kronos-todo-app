@@ -18,7 +18,7 @@
           android:layout_marginTop="10dp" />
 
   <RadioButton
-          android:text="@string/systemtheme"
+          android:text="@string/system_theme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBSystemTheme"
@@ -30,7 +30,7 @@
           app:layout_constraintTop_toBottomOf="@+id/tvTheme" />
 
   <RadioButton
-          android:text="@string/darktheme"
+          android:text="@string/dark_theme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBDark"
@@ -41,7 +41,7 @@
           app:layout_constraintTop_toBottomOf="@+id/rBSystemTheme" />
 
   <RadioButton
-          android:text="@string/whitetheme"
+          android:text="@string/white_theme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBWhiteTheme"
