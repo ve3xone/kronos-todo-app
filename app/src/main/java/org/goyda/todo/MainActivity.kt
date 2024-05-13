@@ -440,6 +440,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         var desc = ""
         var date = ""
         var time = ""
+        var formatloc = ""
 
         lines.forEach { line ->
             when {
@@ -457,10 +458,21 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     time = outputTimeFormat.format(parsedDateTime)
                 }
                 line.startsWith("SUMMARY:") -> {
-                    title = line.substringAfter("SUMMARY:")
+                    title = line.substringAfter("SUMMARY:").replace("\\,", ",")
+                                                                   .replace("\\\"", "\"")
+                }
+                line.startsWith("LOCATION:") -> {
+                    formatloc = line.substringAfter("LOCATION:").replace("\\,", ",")
                 }
                 line.startsWith("DESCRIPTION:") -> {
-                    desc = line.substringAfter("DESCRIPTION:")
+                    val formatingdesc = line.substringAfter("DESCRIPTION:").replace("\\n", "\n")
+                                                                                   .replace("\\,", ",")
+                    desc = if (formatloc != ""){
+                        "Где проходит: $formatloc\n\n$formatingdesc"
+                    } else{
+                        formatingdesc
+                    }
+                    formatloc = ""
                 }
                 line.startsWith("END:VEVENT") -> {
                     if (title != "" && desc != "") {
