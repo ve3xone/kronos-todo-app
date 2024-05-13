@@ -38,9 +38,9 @@ class AlarmReceiver : BroadcastReceiver()
             val notificationChannel =
                 NotificationChannel("Remainder", "My Notifications", NotificationManager.IMPORTANCE_MAX)
             // Configure the notification channel.
-            notificationChannel.setDescription("Sample Channel description")
+            notificationChannel.description = "Sample Channel description"
             notificationChannel.enableLights(true)
-            notificationChannel.setLightColor(Color.RED)
+            notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(false)
             notificationManager.createNotificationChannel(notificationChannel)
         }
