@@ -18,17 +18,32 @@
             tools:layout_editor_absoluteY="-10dp"
             tools:layout_editor_absoluteX="-8dp">
 
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/etSearch"
+                android:hint="Поиск (по имени и описанию)"
+                android:text="@={vieModel.title}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintHorizontal_bias="1.0" />
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTodoList"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 tools:listitem="@layout/item_tolist"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:reverseLayout="true"
                 app:stackFromEnd="true"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/etSearch"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +51,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="0dp"/>
+                android:layout_marginTop="50dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
