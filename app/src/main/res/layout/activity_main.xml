@@ -25,7 +25,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/etSearch"
                 android:hint="Поиск (по имени и описанию)"
-                android:text="@={vieModel.title}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
