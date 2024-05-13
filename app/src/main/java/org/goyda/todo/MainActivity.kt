@@ -31,6 +31,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import java.io.*
@@ -61,9 +62,27 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private lateinit var viewModel: ToDoListViewModel
 
+    val THEME_SYSTEM = R.style.AppThemeSystem
+    val THEME_LIGHT = R.style.AppThemeLight
+    val THEME_DARK = R.style.AppThemeDark
+
+    fun switchTheme(themeId: Int) {
+        setTheme(themeId)
+    }
+
+    fun saveTheme(themeId: Int) {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putInt("Theme", themeId).apply()
+    }
+
+    fun getSavedTheme(): Int {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("Theme", THEME_LIGHT) // По умолчанию используем светлую тему
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
+        switchTheme(getSavedTheme())
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -270,6 +289,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.bCancel.setOnClickListener { dialog.dismiss() }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private fun dialogSettings(){
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.settings, null)
@@ -278,6 +298,34 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         val dialog = builder.create()
         dialog.show()
+
+        when (getSavedTheme()) {
+            THEME_SYSTEM -> dialogView.rBSystemTheme.isChecked = true
+            THEME_DARK -> dialogView.rBDark.isChecked = true
+            THEME_LIGHT -> dialogView.rBWhiteTheme.isChecked = true
+        }
+
+        dialogView.rBSystemTheme.setOnClickListener{
+            saveTheme(R.style.AppThemeSystem)
+            setTheme(R.style.AppThemeSystem)
+
+            // Перезапускаем активность, чтобы применить новую тему
+            recreate()
+        }
+
+        dialogView.rBWhiteTheme.setOnClickListener{
+            saveTheme(R.style.AppThemeLight)
+            setTheme(R.style.AppThemeLight)
+
+            recreate()
+        }
+
+        dialogView.rBDark.setOnClickListener{
+            saveTheme(R.style.AppThemeDark)
+            setTheme(R.style.AppThemeDark)
+
+            recreate()
+        }
 
         dialogView.bExportDB.setOnClickListener {
             val timeStamp = SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault()).format(Date())
