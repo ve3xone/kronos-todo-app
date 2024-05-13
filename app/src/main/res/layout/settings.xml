@@ -8,8 +8,8 @@
          tools:context=".MainActivity">
 
   <TextView
-          android:text="Темы: "
-          android:layout_width="41dp"
+          android:text="@string/themes"
+          android:layout_width="60dp"
           android:layout_height="25dp"
           android:id="@+id/tvTheme"
           app:layout_constraintTop_toTopOf="parent"
@@ -18,7 +18,7 @@
           android:layout_marginTop="10dp" />
 
   <RadioButton
-          android:text="По умолчанию как в системе"
+          android:text="@string/systemtheme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBSystemTheme"
@@ -30,7 +30,7 @@
           app:layout_constraintTop_toBottomOf="@+id/tvTheme" />
 
   <RadioButton
-          android:text="Темная"
+          android:text="@string/darktheme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBDark"
@@ -41,7 +41,7 @@
           app:layout_constraintTop_toBottomOf="@+id/rBSystemTheme" />
 
   <RadioButton
-          android:text="Светлая"
+          android:text="@string/whitetheme"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/rBWhiteTheme"
@@ -53,7 +53,7 @@
           app:layout_constraintTop_toBottomOf="@+id/rBDark" />
 
   <TextView
-          android:text="Другое: "
+          android:text="@string/other"
           android:layout_width="55dp"
           android:layout_height="wrap_content"
           android:id="@+id/tvOther"
@@ -63,7 +63,7 @@
           app:layout_constraintTop_toBottomOf="@+id/rBWhiteTheme"/>
 
   <Button
-          android:text="Экспорт базы данных"
+          android:text="@string/export_db"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/bExportDB"
@@ -75,7 +75,7 @@
           app:layout_constraintTop_toBottomOf="@+id/tvOther" />
 
   <Button
-          android:text="Импорт базы данных"
+          android:text="@string/import_db"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/bImportDB"
@@ -86,7 +86,7 @@
           app:layout_constraintTop_toBottomOf="@+id/bExportDB" />
 
   <Button
-          android:text="Экспорт в .ics формат"
+          android:text="@string/export_ics"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/bExportICS"
@@ -97,7 +97,7 @@
           app:layout_constraintTop_toBottomOf="@+id/bImportDB" />
 
   <Button
-          android:text="Импорт в .ics формат"
+          android:text="@string/import_ics"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/bImportICS"
@@ -108,7 +108,7 @@
           app:layout_constraintTop_toBottomOf="@+id/bExportICS" />
 
   <Button
-          android:text="@string/cancel"
+          android:text="@string/back"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:id="@+id/cancel"

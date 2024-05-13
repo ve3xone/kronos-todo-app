@@ -11,4 +11,14 @@
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
     <string name="settings">Настройки</string>
+    <string name="back">Назад</string>
+    <string name="themes">Темы:</string>
+    <string name="systemtheme">По умолчанию как в системе</string>
+    <string name="darktheme">Темная</string>
+    <string name="whitetheme">Светлая</string>
+    <string name="other">Другое:</string>
+    <string name="export_db">Экспорт базы данных</string>
+    <string name="import_db">Импорт базы данных</string>
+    <string name="export_ics">Экспорт в .ics формат</string>
+    <string name="import_ics">Импорт в .ics формат</string>
 </resources>
