@@ -62,20 +62,20 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private lateinit var viewModel: ToDoListViewModel
 
-    val THEME_SYSTEM = R.style.AppThemeSystem
-    val THEME_LIGHT = R.style.AppThemeLight
-    val THEME_DARK = R.style.AppThemeDark
+    private val THEME_SYSTEM = R.style.AppThemeSystem
+    private val THEME_LIGHT = R.style.AppThemeLight
+    private val THEME_DARK = R.style.AppThemeDark
 
-    fun switchTheme(themeId: Int) {
+    private fun switchTheme(themeId: Int) {
         setTheme(themeId)
     }
 
-    fun saveTheme(themeId: Int) {
+    private fun saveTheme(themeId: Int) {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putInt("Theme", themeId).apply()
     }
 
-    fun getSavedTheme(): Int {
+    private fun getSavedTheme(): Int {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getInt("Theme", THEME_SYSTEM) // По умолчанию используем системную тему
     }
@@ -375,6 +375,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.cancel.setOnClickListener { dialog.dismiss() }
     }
 
+    @SuppressLint("SdCardPath")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -508,7 +509,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         icsBuilder.appendln("VERSION:2.0")
         icsBuilder.appendln("PRODID:-//My App//My App 1.0//EN")
 
-        val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault())
+        //val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault())
 
         tasks.forEach { task ->
             icsBuilder.appendln("BEGIN:VEVENT")
@@ -610,4 +611,5 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 //    override fun onStop() {
 //        super.onStop()
 //    }
+
 }
