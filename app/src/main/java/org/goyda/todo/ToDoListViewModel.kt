@@ -100,6 +100,15 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         toDoList.value = getAllData
     }
 
+    fun clearList() {
+        toDoList.value = emptyList()
+    }
+
+    fun filterListByTitleAndDesc(query: String) {
+        val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) || it.desc.contains(query, ignoreCase = true) }
+        toDoList.value = filteredList
+    }
+
     fun delete(id: Long) {
         database?.toDoListDao()?.delete(id)
         database?.toDoListDao()?.getAll().let {
