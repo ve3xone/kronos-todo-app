@@ -431,6 +431,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             val icsContent = stream.bufferedReader().use { it.readText() }
             parseICSContent(icsContent)
         }
+        Toast.makeText(this, getString(R.string.comp_import_ics), Toast.LENGTH_SHORT).show()
     }
 
     private fun parseICSContent(icsContent: String) {
@@ -460,6 +461,20 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     }
 
                 }
+                line.startsWith("DTSTART:") -> {
+                    val startDateString = line.substringAfter("DTSTART:")
+                    val parsedDateTime = dateFormat.parse(startDateString)
+
+                    if (parsedDateTime != null) {
+                        viewModel.hour = parsedDateTime.hours
+                        viewModel.minute = parsedDateTime.minutes
+                        viewModel.day = parsedDateTime.date
+                        viewModel.month = parsedDateTime.month
+                        viewModel.year = startDateString.substring(0,4).toInt()
+                        date = outputDateFormat.format(parsedDateTime)
+                        time = outputTimeFormat.format(parsedDateTime)
+                    }
+                }
                 line.startsWith("SUMMARY:") -> {
                     title = line.substringAfter("SUMMARY:").replace("\\,", ",")
                                                                    .replace("\\\"", "\"")
@@ -487,7 +502,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     date = ""
                     time = ""
                     desc = ""
-
                 }
             }
         }
@@ -501,6 +515,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             val icsContent = generateICSContent(tasks)
             stream?.write(icsContent.toByteArray())
         }
+        Toast.makeText(this, getString(R.string.comp_export_ics), Toast.LENGTH_SHORT).show()
     }
 
     private fun generateICSContent(tasks: List<ToDoListData>): String {
@@ -517,9 +532,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             icsBuilder.appendln("SUMMARY:${task.title}")
             icsBuilder.appendln("DESCRIPTION:${task.desc}")
             val formattedDateTime = formatDateAndTime(task.date, task.time)
-            icsBuilder.appendln("DTSTART;:$formattedDateTime")
+            icsBuilder.appendln("DTSTART:$formattedDateTime")
             //заглушка
-            icsBuilder.appendln("DTEND;:$formattedDateTime")
+            icsBuilder.appendln("DTEND:$formattedDateTime")
             icsBuilder.appendln("END:VEVENT")
         }
 
@@ -544,7 +559,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 }
             }
         }
-        Toast.makeText(this, "Files zipped successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.comp_export_db), Toast.LENGTH_SHORT).show()
     }
 
     private fun unzipFiles(zipFile: InputStream?, outputDir: String) {
@@ -565,7 +580,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 zipEntry = zipInputStream.nextEntry
             }
         }
-        Toast.makeText(this, "Files unzipped successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.comp_import_db), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
