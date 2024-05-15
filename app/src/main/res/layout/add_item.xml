@@ -7,6 +7,10 @@
         <variable name="vieModel" type="org.goyda.todo.ToDoListViewModel"/>
     </data>
 
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -118,4 +122,5 @@
                 app:layout_constraintHorizontal_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
