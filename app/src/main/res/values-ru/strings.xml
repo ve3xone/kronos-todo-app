@@ -21,4 +21,8 @@
     <string name="import_db">Импорт базы данных</string>
     <string name="export_ics">Экспорт в .ics формат</string>
     <string name="import_ics">Импорт в .ics формат</string>
+    <string name="comp_export_db">Экспорт базы данных успешно завершен</string>
+    <string name="comp_import_db">Импорт базы данных успешно завершен</string>
+    <string name="comp_export_ics">Задачи были успешно экспортированы в формат iCalendar</string>
+    <string name="comp_import_ics">Задачи были успешно импортированы из формата iCalendar</string>
 </resources>

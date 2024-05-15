@@ -21,4 +21,8 @@
     <string name="import_db">Importing a database</string>
     <string name="export_ics">Export to .ics format</string>
     <string name="import_ics">Import to .ics format</string>
+    <string name="comp_export_db">Database export completed successfully</string>
+    <string name="comp_import_db">Database import completed successfully</string>
+    <string name="comp_export_ics">The tasks were successfully exported to iCalendar format</string>
+    <string name="comp_import_ics">The tasks were successfully imported from the iCalendar format</string>
 </resources>
