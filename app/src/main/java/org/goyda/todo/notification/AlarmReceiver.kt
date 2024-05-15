@@ -62,10 +62,6 @@ class AlarmReceiver : BroadcastReceiver()
             val list = toDoListDatabase?.toDoListDao()?.get(dbId)
             Log.d("IsRead","isRead "+list?.isShow)
         }
-
-
-
-
     }
 
     private fun initiateDatabase(context: Context) {

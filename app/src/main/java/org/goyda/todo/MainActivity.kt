@@ -359,7 +359,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             startActivityForResult(importIntent, IMPORT_DB_REQUEST_CODE)
         }
 
-        //tasks.ics: Выбирите папку и нажмите использовать в неё создаться файл с именем tasks.ics и его можно будет использовать в календаре
+        // tasks.ics: Выбирите папку и нажмите использовать
+        // в неё создаться файл с именем tasks.ics и его можно будет использовать в календаре
         dialogView.bExportICS.setOnClickListener{
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
             startActivityForResult(intent, EXPORT_ICS_REQUEST_CODE)

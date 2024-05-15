@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.goyda.todo.R
 import org.goyda.todo.databinding.ItemTolistBinding
 
 class ListAdapter(private val listData: List<ToDoListData>, private val onClick: OnItemClick) :
