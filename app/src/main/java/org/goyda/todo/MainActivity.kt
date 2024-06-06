@@ -1,13 +1,10 @@
 package org.goyda.todo
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,9 +12,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -84,6 +81,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         switchTheme(getSavedTheme())
         super.onCreate(savedInstanceState)
+        disableBatteryOptimization(this)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ToDoListViewModel::class.java)
@@ -93,12 +92,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             //viewModel.clearList()
             //viewModel.getPreviousList() // Повторная загрузка данных
             dialogAddAndEditItem("","","","", false)
-        }
-
-        // Проверяем, было ли уже дано разрешение на уведомления
-        if (!isNotificationPermissionGranted()) {
-            // Если разрешение не было дано, запрашиваем его
-            requestNotificationPermission()
         }
 
         //Инверсированый список задач
@@ -140,7 +133,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                         isShow = it.isShow
                     )
                 )
-
             }
             //list.addAll(tempList.filter { it.isShow > 1 }?.sortedByDescending { it.isShow })
             list.addAll(tempList.sortedBy { it.date + it.time })
@@ -163,26 +155,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         })
     }
 
-    // Для первого запуска приложения
-    // Взять сразу разрешение на уведомления
-    private fun isNotificationPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_NOTIFICATION_POLICY), 123)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == 123) {
-            // Проверяем, дано ли разрешение на уведомления
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Разрешение дано, выполните действия, которые нужно выполнить после получения разрешения
-            } else {
-                // Разрешение не дано, выполните другие действия, чтобы обработать отказ
+    private fun disableBatteryOptimization(context: Context) {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:" + context.packageName)
             }
+            context.startActivity(intent)
         }
     }
 
