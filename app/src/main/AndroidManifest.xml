@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.SET_TIME" tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- test -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <!-- Данные пермишаны нужны для Экспорта и Импорта -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
