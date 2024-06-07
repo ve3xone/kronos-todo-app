@@ -134,9 +134,15 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             }
 
             override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                // Запоминаем время последнего касания
                 lastTapTime = System.currentTimeMillis()
-                // Обработка одиночного касания, если необходимо
+                e?.let {
+                    val childView = rvTodoList.findChildViewUnder(it.x, it.y)
+                    if (childView != null && rvTodoList.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val position = rvTodoList.getChildAdapterPosition(childView)
+                        onItemClick(childView, position)
+                        return true
+                    }
+                }
                 return false
             }
         })
@@ -169,6 +175,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                         }
                     }
                 }
+                return false
+            }
+        })
+
+        rvTodoList.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                // Ваш код для обработки касаний
                 return false
             }
         })
