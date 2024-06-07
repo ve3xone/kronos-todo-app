@@ -30,7 +30,12 @@ import java.util.*
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.view.GestureDetector
+import android.view.MotionEvent
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -63,6 +68,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     private val THEME_LIGHT = R.style.AppThemeLight
     private val THEME_DARK = R.style.AppThemeDark
 
+    private lateinit var gestureDetector: GestureDetector
+
     private fun switchTheme(themeId: Int) {
         setTheme(themeId)
     }
@@ -93,6 +100,67 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             //viewModel.getPreviousList() // Повторная загрузка данных
             dialogAddAndEditItem("","","","", false)
         }
+
+        setupTabs()
+
+        //Жесты
+        gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                if (e1 != null && e2 != null) {
+                    if (e1.x - e2.x > 100 && Math.abs(velocityX) > 100) {
+                        // Swipe left - show next tab
+                        val currentTab = tabs.selectedTabPosition
+                        val nextTab = (currentTab + 1) % tabs.tabCount
+                        tabs.getTabAt(nextTab)?.select()
+                        return true
+                    } else if (e2.x - e1.x > 100 && Math.abs(velocityX) > 100) {
+                        // Swipe right - show previous tab
+                        val currentTab = tabs.selectedTabPosition
+                        val previousTab = if (currentTab - 1 < 0) tabs.tabCount - 1 else currentTab - 1
+                        tabs.getTabAt(previousTab)?.select()
+                        return true
+                    }
+                }
+                return false
+            }
+
+            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                // Обработка одиночного касания, если необходимо
+                return false
+            }
+        })
+
+        rvTodoList.setOnTouchListener { v, event ->
+            if (gestureDetector.onTouchEvent(event)) {
+                true
+            } else {
+                v.onTouchEvent(event)
+            }
+        }
+
+        rvTodoList.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                val action = e.action
+                when (action) {
+                    MotionEvent.ACTION_MOVE -> {
+                        // Если обнаружено движение, предполагаем, что это прокрутка и не обрабатываем как клик
+                        return false
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        // При отпускании, проверяем, было ли это свайпом или простым нажатием
+                        if (!gestureDetector.onTouchEvent(e)) {
+                            // Если это не свайп, то обрабатываем как клик
+                            val childView = rv.findChildViewUnder(e.x, e.y)
+                            if (childView != null && rv.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                                val position = rv.getChildAdapterPosition(childView)
+                                onItemClick(childView, position)
+                            }
+                        }
+                    }
+                }
+                return false
+            }
+        })
 
         //Инверсированый список задач
         rvTodoList.layoutManager = LinearLayoutManager(this).apply {
@@ -162,6 +230,38 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 data = Uri.parse("package:" + context.packageName)
             }
             context.startActivity(intent)
+        }
+    }
+
+    private fun setupTabs() {
+        val tabLayout: TabLayout = findViewById(R.id.tabs)
+        tabLayout.addTab(tabLayout.newTab().setText("Все"))
+        tabLayout.addTab(tabLayout.newTab().setText("Активные"))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> allTasksFragment()
+                    1 -> activeTasksFragment()
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+    }
+
+    private fun allTasksFragment(): Fragment {
+        return Fragment().apply {
+            viewModel.getPreviousList()
+        }
+    }
+
+    private fun activeTasksFragment(): Fragment {
+        return Fragment().apply {
+            // Здесь вы можете добавить логику для отображения активных задач
+            viewModel.filterListByActiveTask()
         }
     }
 
@@ -580,23 +680,33 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
+    var isOpenTask = false;
     override fun onItemClick(v: View, position: Int) {
-        alert {
-            title = list[position].title
-            message = "\n" + list[position].desc + "\n\n\n${list[position].date} ${list[position].time}"
-            positiveButton(getString(R.string.edit)) {
-                viewModel.position = position
-                viewModel.index = list[position].indexDb
-                dialogAddAndEditItem(list[position].title,
-                                     list[position].desc,
-                                     list[position].date,
-                                     list[position].time,
-                                     true)
-            }
-            negativeButton(getString(R.string.delete)) {
-                viewModel.delete(list[position].indexDb)
-            }
-        }.show()
+        if (!isOpenTask){
+            isOpenTask = true
+            alert {
+                title = list[position].title
+                message = "\n" + list[position].desc + "\n\n\n${list[position].date} ${list[position].time}"
+                positiveButton(getString(R.string.edit)) {
+                    viewModel.position = position
+                    viewModel.index = list[position].indexDb
+                    dialogAddAndEditItem(list[position].title,
+                        list[position].desc,
+                        list[position].date,
+                        list[position].time,
+                        true)
+                    isOpenTask = false
+                }
+                negativeButton(getString(R.string.delete)) {
+                    viewModel.delete(list[position].indexDb)
+                    isOpenTask = false
+                }
+                onCancelled {
+                    // Действие при отмене alert
+                    isOpenTask = false
+                }
+            }.show()
+        }
     }
 
 //    override fun onResume() {

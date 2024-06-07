@@ -18,6 +18,8 @@ import org.goyda.todo.database.ToDoListDataEntity
 import org.goyda.todo.database.ToDoListDatabase
 import org.goyda.todo.notification.AlarmReceiver
 import java.util.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     var toDoListData = MutableLiveData<ToDoListData>()
@@ -105,7 +107,16 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     fun filterListByTitleAndDesc(query: String) {
-        val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) || it.desc.contains(query, ignoreCase = true) }
+        val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) ||
+                                               it.desc.contains(query, ignoreCase = true) }
+        toDoList.value = filteredList
+    }
+
+    fun filterListByActiveTask() {
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")
+        val filteredList = getAllData.filter {
+            LocalDateTime.parse(it.date + " " + it.time, formatter).isAfter(LocalDateTime.now())
+        }
         toDoList.value = filteredList
     }
 
