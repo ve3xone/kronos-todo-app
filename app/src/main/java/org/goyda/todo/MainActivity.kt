@@ -115,13 +115,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 if (e1 != null && e2 != null) {
                     // Проверка, что с момента последнего касания прошло достаточно времени
                     if (System.currentTimeMillis() - lastTapTime > 250) {
-                        if (e1.x - e2.x > 200 && Math.abs(velocityX) > 200) {
+                        if (e1.x - e2.x > 225 && Math.abs(velocityX) > 225) {
                             // Swipe left - show next tab
                             val currentTab = tabs.selectedTabPosition
                             val nextTab = (currentTab + 1) % tabs.tabCount
                             tabs.getTabAt(nextTab)?.select()
                             return true
-                        } else if (e2.x - e1.x > 200 && Math.abs(velocityX) > 200) {
+                        } else if (e2.x - e1.x > 225 && Math.abs(velocityX) > 225) {
                             // Swipe right - show previous tab
                             val currentTab = tabs.selectedTabPosition
                             val previousTab = if (currentTab - 1 < 0) tabs.tabCount - 1 else currentTab - 1
