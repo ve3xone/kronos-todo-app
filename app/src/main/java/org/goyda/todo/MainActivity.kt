@@ -37,14 +37,15 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+import kotlin.math.abs
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnItemClick {
 
     private val EXPORT_DB_REQUEST_CODE = 1001
@@ -92,20 +93,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         switchTheme(getSavedTheme())
         super.onCreate(savedInstanceState)
+
+        //Разрешить работу в фоне (уведомления)
         disableBatteryOptimization(this)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ToDoListViewModel::class.java)
-
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener {
-            //viewModel.clearList()
-            //viewModel.getPreviousList() // Повторная загрузка данных
-            dialogAddAndEditItem("","","","", false)
-        }
-
-        setupTabs()
 
         //Жесты
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -121,7 +115,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                             val nextTab = (currentTab + 1) % tabs.tabCount
                             tabs.getTabAt(nextTab)?.select()
                             return true
-                        } else if (e2.x - e1.x > 215 && Math.abs(velocityX) > 215) {
+                        } else if (e2.x - e1.x > 215 && abs(velocityX) > 215) {
                             // Swipe right - show previous tab
                             val currentTab = tabs.selectedTabPosition
                             val previousTab = if (currentTab - 1 < 0) tabs.tabCount - 1 else currentTab - 1
@@ -146,7 +140,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 return false
             }
         })
-
         rvTodoList.setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) {
                 true
@@ -154,37 +147,29 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 v.onTouchEvent(event)
             }
         }
-
         rvTodoList.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 val action = e.action
                 when (action) {
-                    MotionEvent.ACTION_MOVE -> {
-                        // Если обнаружено движение, предполагаем, что это прокрутка и не обрабатываем как клик
-                        return false
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        // При отпускании, проверяем, было ли это свайпом или простым нажатием
-                        if (!gestureDetector.onTouchEvent(e)) {
-                            // Если это не свайп, то обрабатываем как клик
-                            val childView = rv.findChildViewUnder(e.x, e.y)
-                            if (childView != null && rv.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                                val position = rv.getChildAdapterPosition(childView)
-                                onItemClick(childView, position)
-                            }
-                        }
+                    MotionEvent.ACTION_DOWN -> {
+                        rv.parent.requestDisallowInterceptTouchEvent(true)
                     }
                 }
+                gestureDetector.onTouchEvent(e)
                 return false
             }
         })
 
-        rvTodoList.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                // Ваш код для обработки касаний
-                return false
-            }
-        })
+        //Кнопка +
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            //viewModel.clearList()
+            //viewModel.getPreviousList() // Повторная загрузка данных
+            dialogAddAndEditItem("","","","", false)
+        }
+
+        //Вкладки
+        setupTabs()
 
         //Инверсированый список задач
         rvTodoList.layoutManager = LinearLayoutManager(this).apply {
@@ -247,6 +232,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         })
     }
 
+    @SuppressLint("BatteryLife")
     private fun disableBatteryOptimization(context: Context) {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
@@ -265,8 +251,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> allTasksFragment()
-                    1 -> activeTasksFragment()
+                    0 -> {
+                        viewModel.getPreviousList()
+                    }
+                    1 -> {
+                        // Здесь вы можете добавить логику для отображения активных задач
+                        viewModel.filterListByActiveTask()
+                    }
                 }
             }
 
@@ -274,19 +265,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-    }
-
-    private fun allTasksFragment(): Fragment {
-        return Fragment().apply {
-            viewModel.getPreviousList()
-        }
-    }
-
-    private fun activeTasksFragment(): Fragment {
-        return Fragment().apply {
-            // Здесь вы можете добавить логику для отображения активных задач
-            viewModel.filterListByActiveTask()
-        }
     }
 
     private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
@@ -479,7 +457,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.cancel.setOnClickListener { dialog.dismiss() }
     }
 
-    @SuppressLint("SdCardPath")
+    @SuppressLint("SdCardPath", "Recycle")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -704,7 +682,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
-    private var isOpenTask = false;
+    private var isOpenTask = false
     override fun onItemClick(v: View, position: Int) {
         if (!isOpenTask){
             isOpenTask = true
