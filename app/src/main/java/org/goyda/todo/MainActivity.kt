@@ -30,8 +30,12 @@ import java.util.*
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -680,13 +684,22 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
-    var isOpenTask = false;
+    private var isOpenTask = false;
     override fun onItemClick(v: View, position: Int) {
         if (!isOpenTask){
             isOpenTask = true
-            alert {
+
+            val spannableMessage = SpannableString("\n" +
+                                                          list[position].desc +
+                                                          "\n\n\n" +
+                                                          list[position].date+ " " +
+                                                          list[position].time
+            )
+            Linkify.addLinks(spannableMessage, Linkify.WEB_URLS)
+
+            val alert = alert {
                 title = list[position].title
-                message = "\n" + list[position].desc + "\n\n\n${list[position].date} ${list[position].time}"
+                message = spannableMessage
                 positiveButton(getString(R.string.edit)) {
                     viewModel.position = position
                     viewModel.index = list[position].indexDb
@@ -706,6 +719,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     isOpenTask = false
                 }
             }.show()
+
+            (alert as? AlertDialog)?.findViewById<TextView>(android.R.id.message)?.
+                                     movementMethod = LinkMovementMethod.getInstance()
         }
     }
 
