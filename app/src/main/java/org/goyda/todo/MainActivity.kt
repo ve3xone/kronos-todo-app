@@ -109,26 +109,33 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         //Жесты
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            private var lastTapTime: Long = 0
+
             override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
                 if (e1 != null && e2 != null) {
-                    if (e1.x - e2.x > 100 && Math.abs(velocityX) > 100) {
-                        // Swipe left - show next tab
-                        val currentTab = tabs.selectedTabPosition
-                        val nextTab = (currentTab + 1) % tabs.tabCount
-                        tabs.getTabAt(nextTab)?.select()
-                        return true
-                    } else if (e2.x - e1.x > 100 && Math.abs(velocityX) > 100) {
-                        // Swipe right - show previous tab
-                        val currentTab = tabs.selectedTabPosition
-                        val previousTab = if (currentTab - 1 < 0) tabs.tabCount - 1 else currentTab - 1
-                        tabs.getTabAt(previousTab)?.select()
-                        return true
+                    // Проверка, что с момента последнего касания прошло достаточно времени
+                    if (System.currentTimeMillis() - lastTapTime > 250) {
+                        if (e1.x - e2.x > 200 && Math.abs(velocityX) > 200) {
+                            // Swipe left - show next tab
+                            val currentTab = tabs.selectedTabPosition
+                            val nextTab = (currentTab + 1) % tabs.tabCount
+                            tabs.getTabAt(nextTab)?.select()
+                            return true
+                        } else if (e2.x - e1.x > 200 && Math.abs(velocityX) > 200) {
+                            // Swipe right - show previous tab
+                            val currentTab = tabs.selectedTabPosition
+                            val previousTab = if (currentTab - 1 < 0) tabs.tabCount - 1 else currentTab - 1
+                            tabs.getTabAt(previousTab)?.select()
+                            return true
+                        }
                     }
                 }
                 return false
             }
 
             override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                // Запоминаем время последнего касания
+                lastTapTime = System.currentTimeMillis()
                 // Обработка одиночного касания, если необходимо
                 return false
             }
