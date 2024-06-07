@@ -131,9 +131,14 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     @RequiresApi(Build.VERSION_CODES.M)
     fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, desc: String, hour:Int,minute:Int)
     {
+        if (calender.timeInMillis <= System.currentTimeMillis()) {
+            // Время уже прошло, не устанавливаем будильник
+            return
+        }
+
         val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val time = "%02d".format(hour) + ":" + "%02d".format(minute)
+        //val time = "%02d".format(hour) + ":" + "%02d".format(minute)
 
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.putExtra("INTENT_NOTIFY", true)
@@ -143,7 +148,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         intent.putExtra("title", "Задача: $title")
         //intent.putExtra("desc", desc)
         //intent.putExtra("date","Time-> $hour:$minute")
-        intent.putExtra("date","$desc")
+        intent.putExtra("date", desc)
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0)
