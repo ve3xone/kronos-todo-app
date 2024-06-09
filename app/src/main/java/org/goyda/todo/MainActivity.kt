@@ -30,11 +30,14 @@ import java.util.*
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
@@ -89,18 +92,88 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         return sharedPreferences.getInt("Theme", THEME_SYSTEM) // По умолчанию используем системную тему
     }
 
+    private fun saveSetupPass() {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("SetupPass", true).apply()
+    }
+
+    private fun getSetupPass(): Boolean {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean("SetupPass", false)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
-        switchTheme(getSavedTheme())
-        super.onCreate(savedInstanceState)
+        //Безопасность и скрытие содержимого приложения в меню многозадачности
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
 
-        //Разрешить работу в фоне (уведомления)
-        disableBatteryOptimization(this)
+        switchTheme(getSavedTheme())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ToDoListViewModel::class.java)
+        if (!getSetupPass()){
+            showPasswordDialog(getString(R.string.crtpass), getString(R.string.crtpassdesc))
+            saveSetupPass()
+        }
+        else{
+            showPasswordDialog(getString(R.string.entpass), getString(R.string.entpassdesc))
+        }
 
+        super.onCreate(savedInstanceState)
+
+        //Разрешить работу в фоне (уведомления)
+        disableBatteryOptimization(this)
+    }
+
+    private var dialogView = false
+    private var password = ""
+    private fun showPasswordDialog(title: String, message: String) {
+        val passwordEditText = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        dialogView = true
+        val dialog = AlertDialog.Builder(this, R.style.PasswordDialogTheme)
+            .setTitle(title)
+            .setMessage(message)
+            .setView(passwordEditText)
+            .setPositiveButton("OK", null)
+            .setNegativeButton(getString(R.string.exit)) { _, _ ->
+                finish()
+            }
+            .setCancelable(false)
+            .create()
+
+
+        dialog.show()
+        dialog.setOnCancelListener {
+            finish()
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if (!viewModel.isAuthenticated){
+                password = passwordEditText.text.toString()
+                viewModel.initializeDatabase(password)
+                if (viewModel.isAuthenticated){
+                    showAll(password)
+                    dialogView = false
+                    dialog.dismiss()
+                }
+            }
+            else
+                if (passwordEditText.text.toString() == password){
+                    dialogView = false
+                    dialog.dismiss()
+                }
+            passwordEditText.text.clear()
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showAll(password: String){
         //Жесты
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             private var lastTapTime: Long = 0
@@ -245,8 +318,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private fun setupTabs() {
         val tabLayout: TabLayout = findViewById(R.id.tabs)
-        tabLayout.addTab(tabLayout.newTab().setText("Все"))
-        tabLayout.addTab(tabLayout.newTab().setText("Активные"))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.all)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.active)))
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -384,6 +457,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.bCancel.setOnClickListener { dialog.dismiss() }
     }
 
+    // Переинициализация активности
+    private fun reinitactive(){
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
     @SuppressLint("CommitPrefEdits")
     private fun dialogSettings(){
         val builder = AlertDialog.Builder(this)
@@ -403,23 +483,19 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView.rBSystemTheme.setOnClickListener{
             saveTheme(R.style.AppThemeSystem)
             setTheme(R.style.AppThemeSystem)
-
-            // Перезапускаем активность, чтобы применить новую тему
-            recreate()
+            reinitactive()
         }
 
         dialogView.rBWhiteTheme.setOnClickListener{
             saveTheme(R.style.AppThemeLight)
             setTheme(R.style.AppThemeLight)
-
-            recreate()
+            reinitactive()
         }
 
         dialogView.rBDark.setOnClickListener{
             saveTheme(R.style.AppThemeDark)
             setTheme(R.style.AppThemeDark)
-
-            recreate()
+            reinitactive()
         }
 
         dialogView.bExportDB.setOnClickListener {
@@ -723,12 +799,24 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//    }
+    private var isReturningFromBackground = false
 
+    override fun onResume() {
+        super.onResume()
+        // Проверяем, возвращается ли пользователь из фонового режима
+        if (isReturningFromBackground) {
+            if (!dialogView)
+                showPasswordDialog(getString(R.string.entpass), getString(R.string.entpassdesc))
+        }
+        isReturningFromBackground = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isReturningFromBackground = true
+    }
+
+    //override fun onStop() {
+    //    super.onStop()
+    //}
 }
