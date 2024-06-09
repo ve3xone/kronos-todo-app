@@ -43,6 +43,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
+
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.0'
+    //implementation 'net.lingala.zip4j:zip4j:2.6.4'
     //room
 
     implementation 'androidx.room:room-testing:2.2.0-alpha02'
