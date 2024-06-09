@@ -42,6 +42,7 @@ import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import org.jetbrains.anko.toast
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -162,13 +163,20 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     dialogView = false
                     dialog.dismiss()
                 }
+                else{
+                    passwordEditText.text.clear()
+                    Toast.makeText(this, getString(R.string.badpass), Toast.LENGTH_SHORT).show()
+                }
             }
             else
                 if (passwordEditText.text.toString() == password){
                     dialogView = false
                     dialog.dismiss()
                 }
-            passwordEditText.text.clear()
+                else{
+                    passwordEditText.text.clear()
+                    Toast.makeText(this, getString(R.string.badpass), Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
