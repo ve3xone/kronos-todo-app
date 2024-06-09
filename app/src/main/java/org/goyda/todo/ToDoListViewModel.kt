@@ -5,11 +5,9 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -24,15 +22,31 @@ import java.time.format.DateTimeFormatter
 class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     var toDoListData = MutableLiveData<ToDoListData>()
 
-    var database: ToDoListDatabase? = null
+    private var database: ToDoListDatabase? = null
 
-    var getAllData = mutableListOf(ToDoListDataEntity())
+    private var getAllData = mutableListOf(ToDoListDataEntity())
     val toDoList = MutableLiveData<List<ToDoListDataEntity>>()
 
-    init {
-        database = ToDoListDatabase.getInstance(context)
-        database?.toDoListDao()?.getAll()?.let {
-            getAllData = it as MutableList<ToDoListDataEntity>
+    //init {
+        //database = ToDoListDatabase.getInstance(context)
+        //database?.toDoListDao()?.getAll()?.let {
+        //    getAllData = it as MutableList<ToDoListDataEntity>
+        //}
+    //}
+
+    private var pass = ""
+    public var isAuthenticated = false
+    fun initializeDatabase(password: String) {
+        pass = password
+        database = ToDoListDatabase.getInstance(getApplication(), password)
+        try {
+            database?.toDoListDao()?.getAll()?.let {
+                getAllData = it as MutableList<ToDoListDataEntity>
+            }
+            isAuthenticated = true
+        }
+        catch (_: net.sqlcipher.database.SQLiteException){
+            isAuthenticated = false
         }
     }
 
@@ -64,7 +78,6 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     @WorkerThread
     fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
@@ -128,7 +141,6 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, desc: String, hour:Int,minute:Int)
     {
         if (calender.timeInMillis <= System.currentTimeMillis()) {
@@ -149,6 +161,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         //intent.putExtra("desc", desc)
         //intent.putExtra("date","Time-> $hour:$minute")
         intent.putExtra("date", desc)
+        intent.putExtra("pass", pass)
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0)
