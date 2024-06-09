@@ -19,11 +19,12 @@ class AlarmReceiver : BroadcastReceiver()
 {
     private val GROUP_MESSAGE: String = "TODOLIST"
 
-    var toDoListDatabase: ToDoListDatabase? = null
+    private var toDoListDatabase: ToDoListDatabase? = null
 
     @SuppressLint("WrongConstant")
     override fun onReceive(context: Context?, intent: Intent?) {
-        context?.let { initiateDatabase(it) }
+        val pass = intent?.getStringExtra("pass")?:""
+        context?.let { initiateDatabase(it,pass) }
         val notificationManager: NotificationManager =
             context?.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
         var isShow = intent?.getIntExtra("isShow", 0) ?: 0
@@ -64,9 +65,9 @@ class AlarmReceiver : BroadcastReceiver()
         }
     }
 
-    private fun initiateDatabase(context: Context) {
+    private fun initiateDatabase(context: Context, pass: String) {
         if (toDoListDatabase == null)
-            toDoListDatabase = ToDoListDatabase.getInstance(context)
+            toDoListDatabase = ToDoListDatabase.getInstance(context, pass)
     }
 
     // to show multiple number of notification , there is need of unique number
