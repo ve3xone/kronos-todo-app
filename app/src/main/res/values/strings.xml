@@ -33,4 +33,5 @@
     <string name="all">All</string>
     <string name="active">Active</string>
     <string name="search">Search</string>
+    <string name="badpass">You have entered an incorrect password</string>
 </resources>

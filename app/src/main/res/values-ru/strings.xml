@@ -33,4 +33,5 @@
     <string name="all">Все</string>
     <string name="active">Активные</string>
     <string name="search">Поиск</string>
+    <string name="badpass">Вы ввели неверный пароль</string>
 </resources>
