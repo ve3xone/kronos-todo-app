@@ -25,4 +25,12 @@
     <string name="comp_import_db">Импорт базы данных успешно завершен</string>
     <string name="comp_export_ics">Задачи были успешно экспортированы в формат iCalendar</string>
     <string name="comp_import_ics">Задачи были успешно импортированы из формата iCalendar</string>
+    <string name="exit">Выход</string>
+    <string name="crtpass">Создание пароля</string>
+    <string name="entpass">Ввод пароля</string>
+    <string name="crtpassdesc">Введите ваш пароль который будет использоваться в приложении</string>
+    <string name="entpassdesc">Введите ваш пароль который вы установили в приложении</string>
+    <string name="all">Все</string>
+    <string name="active">Активные</string>
+    <string name="search">Поиск</string>
 </resources>

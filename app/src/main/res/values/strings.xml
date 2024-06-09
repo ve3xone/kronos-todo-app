@@ -25,4 +25,12 @@
     <string name="comp_import_db">Database import completed successfully</string>
     <string name="comp_export_ics">The tasks were successfully exported to iCalendar format</string>
     <string name="comp_import_ics">The tasks were successfully imported from the iCalendar format</string>
+    <string name="exit">Exit</string>
+    <string name="crtpass">Password creation</string>
+    <string name="entpass">Password entry</string>
+    <string name="crtpassdesc">Enter your password to be used in the application</string>
+    <string name="entpassdesc">Enter your password that you set in the application</string>
+    <string name="all">All</string>
+    <string name="active">Active</string>
+    <string name="search">Search</string>
 </resources>
