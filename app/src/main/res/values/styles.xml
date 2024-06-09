@@ -25,5 +25,10 @@
         <!-- <item name="android:fontFamily">@font/font</item>-->
     </style>
 
+    <style name="PasswordDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowBackground">#525252</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">1</item>
+    </style>
 
 </resources>
