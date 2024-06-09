@@ -4,6 +4,8 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-orange)
 ![Room Database](https://img.shields.io/badge/Room%20Database-blue)
 ![Android Notifications](https://img.shields.io/badge/Notifications-Yes-green)
+![Privacy](https://img.shields.io/badge/Privacy-yes-blue)
+![Safety](https://img.shields.io/badge/Safety-yes-green)
 
 Это простое приложение Todo (tasks manager), разработанное на Kotlin, которое использует библиотеку Room Database для управления задачами. Он также включает в себя функцию уведомления, чтобы напоминать пользователям о задачах в определенные даты и время.
 
