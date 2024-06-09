@@ -14,6 +14,7 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp"
             tools:context=".MainActivity"
+            android:excludeFromRecents="true"
             tools:layout_editor_absoluteY="-10dp"
             tools:layout_editor_absoluteX="-8dp">
 
@@ -30,7 +31,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/etSearch"
-                android:hint="Поиск (по имени и описанию)"
+                android:hint="@string/search"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"

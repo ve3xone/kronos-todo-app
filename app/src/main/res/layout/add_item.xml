@@ -17,6 +17,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 tools:context=".MainActivity"
+                android:excludeFromRecents="true"
                 tools:layout_editor_absoluteY="-10dp"
                 tools:layout_editor_absoluteX="-8dp">
 
