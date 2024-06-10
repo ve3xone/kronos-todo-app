@@ -44,6 +44,8 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import java.io.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
@@ -116,6 +118,14 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         viewModel = ViewModelProviders.of(this).get(ToDoListViewModel::class.java)
+
+        //Инверсированый список задач
+        rvTodoList.layoutManager = LinearLayoutManager(this).apply {
+            reverseLayout = true
+            stackFromEnd = true
+        }
+        rvTodoList.adapter = listAdapter
+
         if (!getSetupPass()){
             showPasswordDialog(getString(R.string.crtpass), getString(R.string.crtpassdesc))
             saveSetupPass()
@@ -260,12 +270,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         //Вкладки
         setupTabs()
 
-        //Инверсированый список задач
-        rvTodoList.layoutManager = LinearLayoutManager(this).apply {
-            reverseLayout = true
-            stackFromEnd = true
-        }
-        rvTodoList.adapter = listAdapter
         binding.vieModel = viewModel
 
         viewModel.getPreviousList()
@@ -288,6 +292,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
             list.clear()
             val tempList = mutableListOf<ToDoListData>()
+
             it.forEach {
                 tempList.add(
                     ToDoListData(
@@ -301,7 +306,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 )
             }
             //list.addAll(tempList.filter { it.isShow > 1 }?.sortedByDescending { it.isShow })
-            list.addAll(tempList.sortedBy { it.date + it.time })
+            val formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")
+            val sortedList = tempList.sortedBy { LocalDateTime.parse(it.date+" "+it.time, formatter) }
+            list.addAll(sortedList)
             //list.addAll(tempList)
             listAdapter.notifyDataSetChanged()
             viewModel.position = -1
@@ -344,7 +351,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                         viewModel.getPreviousList()
                     }
                     1 -> {
-                        // Здесь вы можете добавить логику для отображения активных задач
                         viewModel.filterListByActiveTask()
                     }
                 }
@@ -426,7 +432,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         })
 
         dialogView.etdate.setOnClickListener {
-
             val dpd = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
 
                 // Display Selected date in textbox
@@ -438,7 +443,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
             dpd.datePicker.minDate = System.currentTimeMillis() - 1000
             dpd.show()
-
         }
 
         dialogView.etTime.setOnClickListener {
@@ -590,13 +594,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault())
     private val inputDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    private val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val outputDateFormat = SimpleDateFormat("dd/M/yyyy", Locale.getDefault())
     private val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     private fun formatDateAndTime(date: String, time: String): String {
         val dateTime = "$date $time"
         val parsedDate = inputDateFormat.parse(dateTime)
-        return dateFormat.format(parsedDate as Date)
+        return dateFormat.format(parsedDate)
     }
 
     private fun importTasksFromICS(fileUri: Uri) {
