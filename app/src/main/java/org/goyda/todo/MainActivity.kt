@@ -35,6 +35,7 @@ import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.view.GestureDetector
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.EditText
@@ -42,7 +43,6 @@ import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import org.jetbrains.anko.toast
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -133,10 +133,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     private var dialogView = false
     private var password = ""
     private fun showPasswordDialog(title: String, message: String) {
+        dialogView = true
         val passwordEditText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
-        dialogView = true
         val dialog = AlertDialog.Builder(this, R.style.PasswordDialogTheme)
             .setTitle(title)
             .setMessage(message)
@@ -150,6 +150,14 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
 
         dialog.show()
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                finish()
+                true
+            } else {
+                false
+            }
+        }
         dialog.setOnCancelListener {
             finish()
         }
@@ -159,7 +167,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 password = passwordEditText.text.toString()
                 viewModel.initializeDatabase(password)
                 if (viewModel.isAuthenticated){
-                    showAll(password)
+                    showAll()
                     dialogView = false
                     dialog.dismiss()
                 }
@@ -181,7 +189,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun showAll(password: String){
+    private fun showAll() {
         //Жесты
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             private var lastTapTime: Long = 0
@@ -419,7 +427,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         dialogView.etdate.setOnClickListener {
 
-            val dpd = DatePickerDialog(this, { view, year, monthOfYear, dayOfMonth ->
+            val dpd = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
 
                 // Display Selected date in textbox
                 dialogView.etdate.setText("" + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year)
@@ -435,7 +443,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         dialogView.etTime.setOnClickListener {
             val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
                 cal.set(Calendar.MINUTE, minute)
                 this.cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -588,7 +596,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     private fun formatDateAndTime(date: String, time: String): String {
         val dateTime = "$date $time"
         val parsedDate = inputDateFormat.parse(dateTime)
-        return dateFormat.format(parsedDate)
+        return dateFormat.format(parsedDate as Date)
     }
 
     private fun importTasksFromICS(fileUri: Uri) {
