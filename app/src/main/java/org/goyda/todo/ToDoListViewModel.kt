@@ -141,7 +141,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, desc: String, hour:Int,minute:Int)
+    private fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, desc: String, hour:Int, minute:Int)
     {
         if (calender.timeInMillis <= System.currentTimeMillis()) {
             // Время уже прошло, не устанавливаем будильник
@@ -162,7 +162,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         //intent.putExtra("date","Time-> $hour:$minute")
         intent.putExtra("date", desc)
         intent.putExtra("pass", pass)
-        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0)
         {

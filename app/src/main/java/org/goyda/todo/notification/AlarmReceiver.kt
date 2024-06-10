@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.goyda.todo.R
 import org.goyda.todo.database.ToDoListDatabase
-import java.util.*
 
 class AlarmReceiver : BroadcastReceiver()
 {
@@ -24,10 +23,10 @@ class AlarmReceiver : BroadcastReceiver()
     @SuppressLint("WrongConstant")
     override fun onReceive(context: Context?, intent: Intent?) {
         val pass = intent?.getStringExtra("pass")?:""
-        context?.let { initiateDatabase(it,pass) }
+        context?.let { initiateDatabase(it, pass) }
         val notificationManager: NotificationManager =
             context?.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
-        var isShow = intent?.getIntExtra("isShow", 0) ?: 0
+        val isShow = intent?.getIntExtra("isShow", 0) ?: 0
         val dbId = intent?.getLongExtra("id", -1) ?: -1
         val title = intent?.getStringExtra("title") ?: ""
         val time = intent?.getStringExtra("date")?:""
@@ -37,16 +36,15 @@ class AlarmReceiver : BroadcastReceiver()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
-                NotificationChannel("Remainder", "My Notifications", NotificationManager.IMPORTANCE_MAX)
-            // Configure the notification channel.
-            notificationChannel.description = "Sample Channel description"
+                NotificationChannel(dbId.toString(), "$GROUP_MESSAGE Notifications", NotificationManager.IMPORTANCE_MAX)
+            notificationChannel.description = GROUP_MESSAGE
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(false)
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
-        val notification = NotificationCompat.Builder(context, "Remainder")
+        val notification = NotificationCompat.Builder(context, dbId.toString())
             .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(time)
@@ -58,7 +56,7 @@ class AlarmReceiver : BroadcastReceiver()
             .build()
 
         if (toDoListDatabase?.toDoListDao()?.get(dbId) != null){
-            notificationManager.notify(getNumber(), notification)
+            notificationManager.notify(dbId.toInt(), notification)
             toDoListDatabase?.toDoListDao()?.isShownUpdate(id = dbId, isShow = 1)
             val list = toDoListDatabase?.toDoListDao()?.get(dbId)
             Log.d("IsRead","isRead "+list?.isShow)
@@ -69,10 +67,4 @@ class AlarmReceiver : BroadcastReceiver()
         if (toDoListDatabase == null)
             toDoListDatabase = ToDoListDatabase.getInstance(context, pass)
     }
-
-    // to show multiple number of notification , there is need of unique number
-    fun getNumber(): Int = (Date().time / 1000L % Integer.MAX_VALUE).toInt()
-    /*var randomNumber = Random()
-    var m = randomNumber.nextInt(9999 - 1000) + 1000
-    */
 }
