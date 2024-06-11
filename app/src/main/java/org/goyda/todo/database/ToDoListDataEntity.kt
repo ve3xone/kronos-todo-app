@@ -23,7 +23,8 @@ data class ToDoListDataEntity (
     val time : String="",
 
     @ColumnInfo(name = "isShow")
-    val isShow : Int=0 //,
+    val isShow : Int=0,
 
-    //@ColumnInfo(name= "comp") val comp: Boolean=false
+    @ColumnInfo(name= "comp")
+    val comp: Boolean = false
 )
