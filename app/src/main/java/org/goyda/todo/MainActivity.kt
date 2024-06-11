@@ -30,6 +30,7 @@ import java.util.*
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.os.Parcelable
 import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
@@ -158,7 +159,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             .setCancelable(false)
             .create()
 
-
         dialog.show()
         dialog.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
@@ -246,6 +246,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 v.onTouchEvent(event)
             }
         }
+
         rvTodoList.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 val action = e.action
@@ -271,7 +272,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         setupTabs()
 
         binding.vieModel = viewModel
-
         viewModel.getPreviousList()
 
         etSearch.addTextChangedListener(object : TextWatcher {
@@ -301,7 +301,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                         date = it.date,
                         time = it.time,
                         indexDb = it.id,
-                        isShow = it.isShow
+                        isShow = it.isShow,
+                        comp = it.comp
                     )
                 )
             }
@@ -339,6 +340,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
+    // Сохранение состояния
+    private var allState: Parcelable? = null
+    private var activeState: Parcelable? = null
     private fun setupTabs() {
         val tabLayout: TabLayout = findViewById(R.id.tabs)
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.all)))
@@ -348,10 +352,24 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
-                        viewModel.getPreviousList()
+                        if (viewModel.isOpenActiveTask)
+                            activeState = rvTodoList?.layoutManager?.onSaveInstanceState()
+                        viewModel.isOpenActiveTask = false
+                        if (etSearch.text.toString() != "")
+                            viewModel.filterListByTitleAndDesc(etSearch.text.toString())
+                        else
+                            viewModel.getPreviousList()
+                        rvTodoList?.layoutManager?.onRestoreInstanceState(allState)
                     }
                     1 -> {
-                        viewModel.filterListByActiveTask()
+                        if (!viewModel.isOpenActiveTask)
+                            allState = rvTodoList?.layoutManager?.onSaveInstanceState()
+                        viewModel.isOpenActiveTask = true
+                        if (etSearch.text.toString() != "")
+                            viewModel.filterListByTitleAndDesc(etSearch.text.toString())
+                        else
+                            viewModel.filterListByActiveTask()
+                        rvTodoList?.layoutManager?.onRestoreInstanceState(activeState)
                     }
                 }
             }
@@ -779,43 +797,64 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     private var isOpenTask = false
+    private var isOpenCheckBoxComplete = false
+
     override fun onItemClick(v: View, position: Int) {
-        if (!isOpenTask){
-            isOpenTask = true
+        if (v.id == R.id.checkBoxComplete) {
+            val item = list[position]
+            viewModel.compUpdate(item.indexDb,!item.comp)
+            if (viewModel.isOpenActiveTask){
+                viewModel.getPreviousList()
+            }
+            else
+                listAdapter.notifyItemChanged(viewModel.position)
+            isOpenCheckBoxComplete = true
+            return
+        }
+        if (!isOpenCheckBoxComplete) {
+            if (!isOpenTask) {
+                isOpenTask = true
 
-            val spannableMessage = SpannableString("\n" +
-                                                          list[position].desc +
-                                                          "\n\n\n" +
-                                                          list[position].date+ " " +
-                                                          list[position].time
-            )
-            Linkify.addLinks(spannableMessage, Linkify.WEB_URLS)
+                val spannableMessage = SpannableString(
+                    "\n" +
+                            list[position].desc +
+                            "\n\n\n" +
+                            list[position].date + " " +
+                            list[position].time
+                )
+                Linkify.addLinks(spannableMessage, Linkify.WEB_URLS)
 
-            val alert = alert {
-                title = list[position].title
-                message = spannableMessage
-                positiveButton(getString(R.string.edit)) {
-                    viewModel.position = position
-                    viewModel.index = list[position].indexDb
-                    dialogAddAndEditItem(list[position].title,
-                        list[position].desc,
-                        list[position].date,
-                        list[position].time,
-                        true)
-                    isOpenTask = false
-                }
-                negativeButton(getString(R.string.delete)) {
-                    viewModel.delete(list[position].indexDb)
-                    isOpenTask = false
-                }
-                onCancelled {
-                    // Действие при отмене alert
-                    isOpenTask = false
-                }
-            }.show()
+                val alert = alert {
+                    title = list[position].title
+                    message = spannableMessage
+                    positiveButton(getString(R.string.edit)) {
+                        viewModel.position = position
+                        viewModel.index = list[position].indexDb
+                        dialogAddAndEditItem(
+                            list[position].title,
+                            list[position].desc,
+                            list[position].date,
+                            list[position].time,
+                            true
+                        )
+                        isOpenTask = false
+                    }
+                    negativeButton(getString(R.string.delete)) {
+                        viewModel.delete(list[position].indexDb)
+                        isOpenTask = false
+                    }
+                    onCancelled {
+                        // Действие при отмене alert
+                        isOpenTask = false
+                    }
+                }.show()
 
-            (alert as? AlertDialog)?.findViewById<TextView>(android.R.id.message)?.
-                                     movementMethod = LinkMovementMethod.getInstance()
+                (alert as? AlertDialog)?.findViewById<TextView>(android.R.id.message)?.movementMethod =
+                    LinkMovementMethod.getInstance()
+            }
+        }
+        else{
+            isOpenCheckBoxComplete = false
         }
     }
 
