@@ -27,19 +27,16 @@
 
             <TextView
                     android:gravity="center_horizontal"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     tools:text="Title"
                     android:text="@{toDoList.title}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTitle"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintStart_toEndOf="@+id/checkBoxComplete" />
 
             <TextView
                     android:layout_width="0dp"
@@ -52,7 +49,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     app:layout_constraintHorizontal_bias="0.8"
                     android:layout_marginTop="8dp"
-                    android:id="@+id/tvDesc" />
+                    android:id="@+id/tvDesc"
+                    android:maxLines="7" />
 
             <TextView
                     android:layout_width="0dp"
@@ -72,12 +70,18 @@
                     android:textSize="15sp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTime"
-                    app:layout_constraintEnd_toEndOf="parent"
+
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/tvDate"
-                    android:layout_marginLeft="14dp"
                     android:layout_marginStart="14dp" />
+
+            <CheckBox
+                    android:id="@+id/checkBoxComplete"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:checked="@{toDoList.comp}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="0dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
