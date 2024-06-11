@@ -32,14 +32,14 @@ class AlarmReceiver : BroadcastReceiver()
         val time = intent?.getStringExtra("date")?:""
         Log.d("Alarm Title", "title : $title")
 
-        val icon = R.drawable.ic_launcher_background
+        val icon = R.drawable.ic_notify
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
                 NotificationChannel(dbId.toString(), "$GROUP_MESSAGE Notifications", NotificationManager.IMPORTANCE_MAX)
             notificationChannel.description = GROUP_MESSAGE
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
+            //notificationChannel.enableLights(true)
+            //notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(false)
             notificationManager.createNotificationChannel(notificationChannel)
         }
@@ -49,7 +49,7 @@ class AlarmReceiver : BroadcastReceiver()
             .setContentTitle(title)
             .setContentText(time)
             .setPriority(NotificationCompat.VISIBILITY_PUBLIC)
-            .setColor(Color.RED)
+            //.setColor(Color.RED)
             .setGroup(GROUP_MESSAGE)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
