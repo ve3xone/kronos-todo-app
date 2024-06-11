@@ -78,6 +78,14 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
+    fun compUpdate(id:Long , comp : Boolean){
+        database?.toDoListDao()?.compUpdate(id, comp)
+        database?.toDoListDao()?.getAll().let {
+            getAllData = it as MutableList<ToDoListDataEntity>
+            //getPreviousList()
+        }
+    }
+
     @WorkerThread
     fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
@@ -112,7 +120,10 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     fun getPreviousList() {
-        toDoList.value = getAllData
+        if (!isOpenActiveTask)
+            toDoList.value = getAllData
+        else
+            filterListByActiveTask()
     }
 
     fun clearList() {
@@ -120,15 +131,25 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     fun filterListByTitleAndDesc(query: String) {
-        val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) ||
-                                               it.desc.contains(query, ignoreCase = true) }
-        toDoList.value = filteredList
+        if (!isOpenActiveTask){
+            val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) ||
+                    it.desc.contains(query, ignoreCase = true) }
+            toDoList.value = filteredList
+        }
+        else{
+            val filteredList = getAllData.filter { (it.title.contains(query, ignoreCase = true) ||
+                                                    it.desc.contains(query, ignoreCase = true))  }
+                                         .filter { !it.comp }
+            toDoList.value = filteredList
+        }
     }
 
+    public var isOpenActiveTask = false
     fun filterListByActiveTask() {
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")
+        //val formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")
         val filteredList = getAllData.filter {
-            LocalDateTime.parse(it.date + " " + it.time, formatter).isAfter(LocalDateTime.now())
+            !it.comp
+            //LocalDateTime.parse(it.date + " " + it.time, formatter).isAfter(LocalDateTime.now())
         }
         toDoList.value = filteredList
     }
@@ -156,7 +177,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         intent.putExtra("INTENT_NOTIFY", true)
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
-        //intent.putExtra("title", title)
+        intent.putExtra("comp", title)
         intent.putExtra("title", "Задача: $title")
         //intent.putExtra("desc", desc)
         //intent.putExtra("date","Time-> $hour:$minute")
