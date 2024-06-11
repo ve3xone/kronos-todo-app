@@ -12,7 +12,7 @@ interface ToDoListDAO {
     @Insert
     fun insert(toDoListData: ToDoListDataEntity) : Long
 
-    @Query("UPDATE todolist  SET title = :title, desc = :desc, date = :date, time = :time  where id LIKE :id")
+    @Query("UPDATE todolist  SET title = :title, desc = :desc, date = :date, time = :time where id LIKE :id")
     fun update(
         title: String,
         desc: String,
@@ -24,8 +24,11 @@ interface ToDoListDAO {
     @Query("DELETE From todolist where id = :id")
     fun delete(id : Long)
 
-    @Query("UPDATE todolist Set isShow = :isShow  where id LIKE :id")
+    @Query("UPDATE todolist Set isShow = :isShow where id LIKE :id")
     fun isShownUpdate(id:Long , isShow : Int)
+
+    @Query("UPDATE todolist Set comp = :comp where id LIKE :id")
+    fun compUpdate(id:Long , comp : Boolean)
 
     @Query("SELECT * from todolist where id Like :id")
     fun get(id : Long): ToDoListDataEntity
