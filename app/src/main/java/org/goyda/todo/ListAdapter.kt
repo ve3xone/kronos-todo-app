@@ -25,8 +25,12 @@ class ListAdapter(private val listData: List<ToDoListData>, private val onClick:
 
 class ListViewHolder(val binding: ItemTolistBinding, val onClick: OnItemClick) : RecyclerView.ViewHolder(binding.root),
     View.OnClickListener {
+    init {
+        binding.checkBoxComplete.setOnClickListener(this)
+    }
+
     override fun onClick(view: View?) {
-        view?.let {
+        view?.let { it ->
             onClick.onItemClick(it, adapterPosition)
         }
     }
@@ -34,6 +38,7 @@ class ListViewHolder(val binding: ItemTolistBinding, val onClick: OnItemClick) :
     fun bindData(toDoListData: ToDoListData) {
         binding.toDoList = toDoListData
         binding.isRead = toDoListData.isShow==1
+        binding.checkBoxComplete.isChecked = toDoListData.comp
         binding.root.setOnClickListener(this)
     }
 }
