@@ -6,14 +6,14 @@
 
     <item
             android:id="@+id/action_settings"
-            android:icon="@android:drawable/ic_menu_preferences"
+            android:icon="@drawable/ic_settings_dark"
             android:title="@string/settings"
             app:showAsAction="always">
     </item>
 
     <item
             android:id="@+id/switch_theme"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/ic_about_dark"
             android:title="О приложении"
             app:showAsAction="always">
     </item>
