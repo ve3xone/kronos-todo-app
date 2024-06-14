@@ -60,14 +60,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:clickable="true"
-                app:srcCompat="@android:drawable/ic_input_add"
+                app:srcCompat="@drawable/ic_add_dark"
                 android:id="@+id/fab"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/add"
-                android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
