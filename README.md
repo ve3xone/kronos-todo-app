@@ -71,8 +71,10 @@
     - Во вкладке "активные" отображаются задачи которые помечаны как невыполненные
         - Отображаются на которых не стоит галочка
         - [x] Возможность отмечать задачи как выполненные или невыполненные.
+            - [x] Отмечать задачи как выполненые через уведомление задачи
     - [x] Свайпы между вкладками
-- [ ] Сделать как по [дизайну](https://raw.githubusercontent.com/ve3xone/kronos-todo-app/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.png) ([jam](https://github.com/ve3xone/kronos-todo-app/raw/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.jam)).
+- [x] Перевод на английский
+- [x] Сделать как по [дизайну](https://raw.githubusercontent.com/ve3xone/kronos-todo-app/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.png) ([jam](https://github.com/ve3xone/kronos-todo-app/raw/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.jam)).
     - Крч иконки да в целом дизайн достать не получается из-за фигмы jam так что жду иконок и все
         - По итогу было принято не брать дизайн дизайнера так как он сделал в фигме jam...
             - Максимум только иконки возьму...
