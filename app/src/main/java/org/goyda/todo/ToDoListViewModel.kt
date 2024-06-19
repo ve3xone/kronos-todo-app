@@ -16,8 +16,6 @@ import org.goyda.todo.database.ToDoListDataEntity
 import org.goyda.todo.database.ToDoListDatabase
 import org.goyda.todo.notification.AlarmReceiver
 import java.util.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     var toDoListData = MutableLiveData<ToDoListData>()
