@@ -27,5 +27,7 @@
         </activity>
 
         <receiver android:name="org.goyda.todo.notification.AlarmReceiver"/>
+        <receiver android:name="org.goyda.todo.notification.AlarmReceiver$CompleteActionReceiver" />
+        <receiver android:name="org.goyda.todo.notification.AlarmReceiver$IncompleteActionReceiver" />
     </application>
 </manifest>

@@ -28,7 +28,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Parcelable
 import android.text.InputType
@@ -104,6 +106,27 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     private fun getSetupPass(): Boolean {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getBoolean("SetupPass", false)
+    }
+
+    private val taskCompleteReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (viewModel.isAuthenticated){
+                val dbId = intent?.getLongExtra("id", -1) ?: -1
+                viewModel.compUpdateNotify()
+                // Обновите пользовательский интерфейс здесь
+                if (!viewModel.isOpenActiveTask){
+                    if (etSearch.text.toString() != "")
+                        viewModel.filterListByTitleAndDesc(etSearch.text.toString())
+                    else
+                        viewModel.getPreviousList()
+                }
+                else
+                    if (etSearch.text.toString() != "")
+                        viewModel.filterListByTitleAndDesc(etSearch.text.toString())
+                    else
+                        viewModel.filterListByActiveTask()
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -327,6 +350,9 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             }
             viewModel.position = -1
         })
+
+        val filter = IntentFilter("org.goyda.todo.ACTION_TASK_COMPLETE")
+        registerReceiver(taskCompleteReceiver, filter)
     }
 
     @SuppressLint("BatteryLife")
@@ -628,6 +654,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             parseICSContent(icsContent)
         }
         Toast.makeText(this, getString(R.string.comp_import_ics), Toast.LENGTH_SHORT).show()
+
     }
 
     private fun parseICSContent(icsContent: String) {

@@ -86,6 +86,12 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
+    fun compUpdateNotify(){
+        database?.toDoListDao()?.getAll().let {
+            getAllData = it as MutableList<ToDoListDataEntity>
+        }
+    }
+
     @WorkerThread
     fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
