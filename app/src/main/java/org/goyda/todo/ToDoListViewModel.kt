@@ -97,7 +97,24 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
         if (position != -1)
         {
-            database?.toDoListDao()?.update(title = title, desc = desc, date = date, time = time, id = id)
+            val oldId = database?.toDoListDao()?.update(title = title, desc = desc, date = date, time = time, id = id)
+            val cal : Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+
+            cal.set(Calendar.MONTH, month)
+            cal.set(Calendar.YEAR, year)
+            cal.set(Calendar.DAY_OF_MONTH, day)
+
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+
+            Log.d("Alarm Title","$month , $date : ${cal.time}")
+            oldId?.let {
+                setAlarm(cal, 1, id, title,desc,hour,minute)
+            }
+            oldId?.let {
+                setAlarm(cal, 0, id, title,desc,hour,minute)
+            }
         }
         else
         {
