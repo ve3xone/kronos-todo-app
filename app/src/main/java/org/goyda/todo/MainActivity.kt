@@ -116,9 +116,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     private val taskCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (viewModel.isAuthenticated){
-                val dbId = intent?.getLongExtra("id", -1) ?: -1
+                //val dbId = intent?.getLongExtra("id", -1) ?: -1
                 viewModel.compUpdateNotify()
-                // Обновите пользовательский интерфейс здесь
                 if (!viewModel.isOpenActiveTask){
                     if (etSearch.text.toString() != "")
                         viewModel.filterListByTitleAndDesc(etSearch.text.toString())
