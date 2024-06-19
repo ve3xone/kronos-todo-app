@@ -31,11 +31,16 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Parcelable
 import android.text.InputType
+import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.text.util.Linkify
 import android.view.GestureDetector
 import android.view.KeyEvent
@@ -842,17 +847,27 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             if (!isOpenTask) {
                 isOpenTask = true
 
-                val spannableMessage = SpannableString(
-                    "\n" +
-                            list[position].desc +
-                            "\n\n\n" +
-                            list[position].date + " " +
-                            list[position].time
-                )
+                val title = list[position].title + "\n"
+                val desc = "\n" + list[position].desc + "\n\n\n"
+                val dateTime = list[position].date + " " + list[position].time
+
+                val boldTitle = SpannableString(title).apply {
+                    setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(RelativeSizeSpan(1.25f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+
+                val spannableDesc = SpannableString(desc)
+                val spannableDateTime = SpannableString(dateTime)
+
+                val spannableMessage = SpannableStringBuilder().apply {
+                    append(boldTitle)
+                    append(spannableDesc)
+                    append(spannableDateTime)
+                }
                 Linkify.addLinks(spannableMessage, Linkify.WEB_URLS)
 
                 val alert = alert {
-                    title = list[position].title
+                    //title = list[position].title
                     message = spannableMessage
                     positiveButton(getString(R.string.edit)) {
                         viewModel.position = position
