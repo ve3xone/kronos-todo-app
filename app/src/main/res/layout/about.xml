@@ -43,6 +43,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/versionLabel2"
                     android:layout_marginTop="-25dp"
                     android:layout_marginStart="8dp" />
+            
             <TextView
                     android:id="@+id/versionLabel2"
                     android:layout_width="wrap_content"
