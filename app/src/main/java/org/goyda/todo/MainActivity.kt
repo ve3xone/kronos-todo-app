@@ -32,6 +32,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Parcelable
@@ -176,6 +177,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         dialogView = true
         val passwordEditText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            setTextColor(Color.WHITE)
         }
         val dialog = AlertDialog.Builder(this, R.style.PasswordDialogTheme)
             .setTitle(title)
