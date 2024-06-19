@@ -29,6 +29,7 @@ class AlarmReceiver : BroadcastReceiver() {
             context?.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
         val isShow = intent?.getIntExtra("isShow", 0) ?: 0
         val title = intent?.getStringExtra("title") ?: ""
+        val desc = intent?.getStringExtra("desc") ?: ""
         val time = intent?.getStringExtra("date") ?: ""
         Log.d("Alarm Title", "title : $title")
 
@@ -52,6 +53,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(time)
+            .setStyle(NotificationCompat.BigTextStyle().bigText("$time\n\n$desc"))
             .setPriority(NotificationCompat.VISIBILITY_PUBLIC)
             .setGroup(GROUP_MESSAGE)
             .setAutoCancel(true)

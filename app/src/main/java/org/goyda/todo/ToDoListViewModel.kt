@@ -200,11 +200,13 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         intent.putExtra("INTENT_NOTIFY", true)
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
-        intent.putExtra("comp", title)
-        intent.putExtra("title", "Задача: $title")
-        //intent.putExtra("desc", desc)
-        //intent.putExtra("date","Time-> $hour:$minute")
-        intent.putExtra("date", desc)
+        intent.putExtra("title", title)
+        intent.putExtra("desc", desc)
+        intent.putExtra("date",  calender.get(Calendar.DAY_OF_MONTH).toString() + "/" +
+                                             (calender.get(Calendar.MONTH).toInt() + 1).toString() + "/" +
+                                             calender.get(Calendar.YEAR).toString() + " " +
+                                             calender.get(Calendar.HOUR_OF_DAY).toString()+ ":" +
+                                             String.format("%02d", calender.get(Calendar.MINUTE)))
         intent.putExtra("pass", pass)
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
