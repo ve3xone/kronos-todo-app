@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="viewModel" type="org.goyda.todo.ToDoListViewModel"/>
+    </data>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                tools:context=".MainActivity"
+                android:excludeFromRecents="true">
+
+            <!-- Иконка по центру -->
+            <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/versionLabel" />
+
+            <TextView
+                    android:id="@+id/versionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Версия"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorAccent"
+                    app:layout_constraintTop_toBottomOf="@+id/icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/versionLabel2"
+                    android:layout_marginTop="-25dp"
+                    android:layout_marginStart="8dp" />
+            <TextView
+                    android:id="@+id/versionLabel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@+id/versionLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/sourceCodeLabel"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp" />
+
+            <TextView
+                    android:id="@+id/sourceCodeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Исходный код"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorAccent"
+                    app:layout_constraintTop_toBottomOf="@+id/versionLabel2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/sourceCodeLabel2"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp" />
+
+            <TextView
+                    android:id="@+id/sourceCodeLabel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="https://github.com/ve3xone/kronos-todo-app"
+                    android:textSize="15sp"
+                    android:autoLink="web"
+                    app:layout_constraintTop_toBottomOf="@+id/sourceCodeLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/licenseLabel"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp" />
+
+            <TextView
+                    android:id="@+id/licenseLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Лицензия"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorAccent"
+                    app:layout_constraintTop_toBottomOf="@+id/sourceCodeLabel2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/licenseLabel2"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp" />
+
+            <TextView
+                    android:id="@+id/licenseLabel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GNU General Public License version 3"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@+id/licenseLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp" />
+
+            <Button
+                    android:text="OK"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bOk"
+                    app:layout_constraintTop_toBottomOf="@+id/licenseLabel2"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginTop="12dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

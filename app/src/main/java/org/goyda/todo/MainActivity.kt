@@ -31,6 +31,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Parcelable
@@ -51,6 +52,7 @@ import android.widget.TextView
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.about.view.bOk
 import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -820,6 +822,26 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             R.id.action_settings -> {
                 // Обработка нажатия на пункт меню "Settings"
                 dialogSettings()
+                true
+            }
+            R.id.about_info -> {
+                val builder = AlertDialog.Builder(this)
+                val dialogView = layoutInflater.inflate(R.layout.about, null)
+                builder.setView(dialogView)
+                val dialog = builder.create()
+                dialog.show()
+
+                val versionLabel = dialogView.findViewById<TextView>(R.id.versionLabel2)
+
+                try {
+                    val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+                    versionLabel.text = versionName
+                } catch (e: PackageManager.NameNotFoundException) {
+                    versionLabel.text = "Неизвестная версия"
+                }
+
+                dialogView.bOk.setOnClickListener { dialog.dismiss() }
+
                 true
             }
             // Добавьте обработку других пунктов меню, если необходимо
