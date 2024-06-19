@@ -35,4 +35,10 @@
     <string name="search">Search</string>
     <string name="badpass">You have entered an incorrect password</string>
     <string name="done">Done</string>
+    <string name="ver">Version</string>
+    <string name="github_link">https://github.com/ve3xone/kronos-todo-app</string>
+    <string name="sourcecode">Source code</string>
+    <string name="license">License</string>
+    <string name="license_">GNU General Public License version 3</string>
+    <string name="ok">OK</string>
 </resources>

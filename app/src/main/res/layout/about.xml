@@ -19,7 +19,6 @@
                 tools:context=".MainActivity"
                 android:excludeFromRecents="true">
 
-            <!-- Иконка по центру -->
             <ImageView
                     android:id="@+id/icon"
                     android:layout_width="wrap_content"
@@ -35,7 +34,7 @@
                     android:id="@+id/versionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Версия"
+                    android:text="@string/ver"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorAccent"
@@ -60,7 +59,7 @@
                     android:id="@+id/sourceCodeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Исходный код"
+                    android:text="@string/sourcecode"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorAccent"
@@ -74,7 +73,7 @@
                     android:id="@+id/sourceCodeLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="https://github.com/ve3xone/kronos-todo-app"
+                    android:text="@string/github_link"
                     android:textSize="15sp"
                     android:autoLink="web"
                     app:layout_constraintTop_toBottomOf="@+id/sourceCodeLabel"
@@ -87,7 +86,7 @@
                     android:id="@+id/licenseLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Лицензия"
+                    android:text="@string/license"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorAccent"
@@ -101,7 +100,7 @@
                     android:id="@+id/licenseLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="GNU General Public License version 3"
+                    android:text="@string/license_"
                     android:textSize="15sp"
                     app:layout_constraintTop_toBottomOf="@+id/licenseLabel"
                     app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +108,7 @@
                     android:layout_marginStart="8dp" />
 
             <Button
-                    android:text="OK"
+                    android:text="@string/ok"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/bOk"

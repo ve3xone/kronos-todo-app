@@ -35,4 +35,7 @@
     <string name="search">Поиск</string>
     <string name="badpass">Вы ввели неверный пароль</string>
     <string name="done">Выполнено</string>
+    <string name="ver">Версия</string>
+    <string name="sourcecode">Исходный код</string>
+    <string name="license">Лицензия</string>
 </resources>
