@@ -56,7 +56,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setGroup(GROUP_MESSAGE)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .addAction(0, "Выполнено", completePendingIntent)
+            .addAction(0, context.getString(R.string.done), completePendingIntent)
             .build()
 
         if (toDoListDatabase?.toDoListDao()?.get(dbId) != null) {
