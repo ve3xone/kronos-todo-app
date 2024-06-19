@@ -27,13 +27,15 @@
 
             <TextView
                     android:gravity="center_horizontal"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     tools:text="Title"
                     android:text="@{toDoList.title}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTitle"
                     android:textStyle="bold"
+                    android:maxLines="5"
+                    android:ellipsize="end"
                     tools:layout_editor_absoluteY="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/checkBoxComplete" />
@@ -49,6 +51,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     app:layout_constraintHorizontal_bias="0.8"
                     android:layout_marginTop="8dp"
+                    android:ellipsize="end"
                     android:id="@+id/tvDesc"
                     android:maxLines="7" />
 
