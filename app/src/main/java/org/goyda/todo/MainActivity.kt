@@ -859,7 +859,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             val item = list[position]
             viewModel.compUpdate(item.indexDb,!item.comp)
             if (viewModel.isOpenActiveTask){
-                viewModel.getPreviousList()
+                if (etSearch.text.toString() != "")
+                    viewModel.filterListByTitleAndDesc(etSearch.text.toString())
+                else
+                    viewModel.getPreviousList()
             }
             else
                 listAdapter.notifyItemChanged(viewModel.position)
