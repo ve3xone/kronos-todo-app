@@ -14,7 +14,7 @@
     <item
             android:id="@+id/about_info"
             android:icon="@drawable/ic_about_dark"
-            android:title="О приложении"
+            android:title="@string/about"
             app:showAsAction="always">
     </item>
 

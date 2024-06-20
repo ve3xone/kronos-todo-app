@@ -41,4 +41,5 @@
     <string name="license">License</string>
     <string name="license_">GNU General Public License version 3</string>
     <string name="ok">OK</string>
+    <string name="about">About</string>
 </resources>
