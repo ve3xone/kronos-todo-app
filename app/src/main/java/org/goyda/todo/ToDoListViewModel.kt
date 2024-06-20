@@ -154,12 +154,16 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     fun filterListByTitleAndDesc(query: String) {
         if (!isOpenActiveTask){
             val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) ||
-                    it.desc.contains(query, ignoreCase = true) }
+                                                   it.desc.contains(query, ignoreCase = true) ||
+                                                   it.date.contains(query, ignoreCase = true) ||
+                                                   it.time.contains(query, ignoreCase = true)  }
             toDoList.value = filteredList
         }
         else{
-            val filteredList = getAllData.filter { (it.title.contains(query, ignoreCase = true) ||
-                                                    it.desc.contains(query, ignoreCase = true))  }
+            val filteredList = getAllData.filter { it.title.contains(query, ignoreCase = true) ||
+                                                   it.desc.contains(query, ignoreCase = true) ||
+                                                   it.date.contains(query, ignoreCase = true) ||
+                                                   it.time.contains(query, ignoreCase = true) }
                                          .filter { !it.comp }
             toDoList.value = filteredList
         }
