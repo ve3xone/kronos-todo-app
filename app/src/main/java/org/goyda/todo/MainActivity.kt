@@ -662,7 +662,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             parseICSContent(icsContent)
         }
         Toast.makeText(this, getString(R.string.comp_import_ics), Toast.LENGTH_SHORT).show()
-
     }
 
     private fun parseICSContent(icsContent: String) {
