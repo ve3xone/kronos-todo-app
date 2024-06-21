@@ -12,8 +12,8 @@
 
    <TextView
            android:text="@string/themes"
-           android:layout_width="60dp"
-           android:layout_height="25dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
            android:id="@+id/tvTheme"
            app:layout_constraintTop_toTopOf="parent"
            app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
 
    <TextView
            android:text="@string/other"
-           android:layout_width="55dp"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:id="@+id/tvOther"
            app:layout_constraintStart_toStartOf="parent"
