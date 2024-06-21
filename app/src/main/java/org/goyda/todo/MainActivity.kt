@@ -116,6 +116,16 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         return sharedPreferences.getBoolean("SetupPass", false)
     }
 
+    private fun getImportDB(): Boolean {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean("ImportDB", false)
+    }
+
+    private fun saveImportDB(boolean: Boolean) {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("ImportDB", boolean).apply()
+    }
+
     private val taskCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (viewModel.isAuthenticated){
@@ -207,6 +217,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             if (!viewModel.isAuthenticated){
                 password = passwordEditText.text.toString()
                 viewModel.initializeDatabase(password)
+                if (getImportDB()){
+                    viewModel.setAllAlarm()
+                    saveImportDB(false)
+                }
                 if (viewModel.isAuthenticated){
                     showAll()
                     dialogView = false
@@ -416,17 +430,19 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 
+    private var addItemDialog: AlertDialog? = null
+
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
-    fun dialogAddAndEditItem(title: String, desc: String, date: String, time:String, edit: Boolean){
+    fun dialogAddAndEditItem(title: String, desc: String, date: String, time: String, edit: Boolean) {
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.add_item, null)
 
         builder.setView(dialogView)
 
-        val dialog = builder.create()
-        dialog.show()
+        addItemDialog = builder.create()
+        addItemDialog?.show()
 
-        if (edit){
+        if (edit) {
             dialogView.bAddAndEditList.text = getString(R.string.edit)
             dialogView.editText.text = title.toEditable()
             dialogView.etDesc.text = desc.toEditable()
@@ -443,7 +459,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // При изменении текста в EditText обновляем значение переменной viewModel.title
                 viewModel.title.set(s.toString())
             }
 
@@ -454,7 +469,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // При изменении текста в EditText обновляем значение переменной viewModel.title
                 viewModel.date.set(s.toString())
             }
 
@@ -465,7 +479,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // При изменении текста в EditText обновляем значение переменной viewModel.title
                 viewModel.desc.set(s.toString())
             }
 
@@ -476,7 +489,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // При изменении текста в EditText обновляем значение переменной viewModel.title
                 viewModel.time.set(s.toString())
             }
 
@@ -485,9 +497,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         dialogView.etdate.setOnClickListener {
             val dpd = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
-
-                // Display Selected date in textbox
-                dialogView.etdate.setText("" + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year)
+                dialogView.etdate.setText("$dayOfMonth/${monthOfYear + 1}/$year")
                 viewModel.month = monthOfYear
                 viewModel.year = year
                 viewModel.day = dayOfMonth
@@ -523,10 +533,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         dialogView.bAddAndEditList.setOnClickListener {
             viewModel.click(it)
-            dialog.dismiss()
+            addItemDialog?.dismiss()
         }
 
-        dialogView.bCancel.setOnClickListener { dialog.dismiss() }
+        dialogView.bCancel.setOnClickListener { addItemDialog?.dismiss() }
     }
 
     // Переинициализация активности
@@ -536,15 +546,17 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         startActivity(intent)
     }
 
+    private var settingsDialog: AlertDialog? = null
+
     @SuppressLint("CommitPrefEdits")
-    private fun dialogSettings(){
+    private fun dialogSettings() {
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.settings, null)
 
         builder.setView(dialogView)
 
-        val dialog = builder.create()
-        dialog.show()
+        settingsDialog = builder.create()
+        settingsDialog?.show()
 
         when (getSavedTheme()) {
             THEME_SYSTEM -> dialogView.rBSystemTheme.isChecked = true
@@ -552,19 +564,19 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             THEME_LIGHT -> dialogView.rBWhiteTheme.isChecked = true
         }
 
-        dialogView.rBSystemTheme.setOnClickListener{
+        dialogView.rBSystemTheme.setOnClickListener {
             saveTheme(R.style.AppThemeSystem)
             setTheme(R.style.AppThemeSystem)
             reinitactive()
         }
 
-        dialogView.rBWhiteTheme.setOnClickListener{
+        dialogView.rBWhiteTheme.setOnClickListener {
             saveTheme(R.style.AppThemeLight)
             setTheme(R.style.AppThemeLight)
             reinitactive()
         }
 
-        dialogView.rBDark.setOnClickListener{
+        dialogView.rBDark.setOnClickListener {
             saveTheme(R.style.AppThemeDark)
             setTheme(R.style.AppThemeDark)
             reinitactive()
@@ -590,19 +602,19 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         // tasks.ics: Выбирите папку и нажмите использовать
         // в неё создаться файл с именем tasks.ics и его можно будет использовать в календаре
-        dialogView.bExportICS.setOnClickListener{
+        dialogView.bExportICS.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
             startActivityForResult(intent, EXPORT_ICS_REQUEST_CODE)
         }
 
-        dialogView.bImportICS.setOnClickListener{
+        dialogView.bImportICS.setOnClickListener {
             // Вызываем Intent для выбора файла для импорта
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.type = "text/calendar"
             startActivityForResult(intent, IMPORT_ICS_REQUEST_CODE)
         }
 
-        dialogView.cancel.setOnClickListener { dialog.dismiss() }
+        dialogView.cancel.setOnClickListener { settingsDialog?.dismiss() }
     }
 
     @SuppressLint("SdCardPath", "Recycle")
@@ -620,8 +632,10 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             val uri = data?.data
             val zipFile = uri?.let { contentResolver.openInputStream(it) }
             val outputDir = "/data/data/org.goyda.todo/databases"
+            viewModel.cancelAllAlarm()
             unzipFiles(zipFile, outputDir)
             //Перезапуск RecyclerView
+            saveImportDB(true)
             val intent = Intent(applicationContext, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
@@ -818,6 +832,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         return true
     }
 
+    private var aboutDialog: AlertDialog? = null
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
@@ -830,6 +846,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 val dialogView = layoutInflater.inflate(R.layout.about, null)
                 builder.setView(dialogView)
                 val dialog = builder.create()
+                aboutDialog = dialog
                 dialog.show()
 
                 val versionLabel = dialogView.findViewById<TextView>(R.id.versionLabel2)
@@ -841,7 +858,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     versionLabel.text = "Неизвестная версия"
                 }
 
-                dialogView.bOk.setOnClickListener { dialog.dismiss() }
+                dialogView.findViewById<View>(R.id.bOk).setOnClickListener { dialog.dismiss() }
 
                 true
             }
@@ -935,11 +952,32 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 showPasswordDialog(getString(R.string.entpass), getString(R.string.entpassdesc))
         }
         isReturningFromBackground = false
+        // Регистрация ресивера снова
+        val filter = IntentFilter("org.goyda.todo.ACTION_TASK_COMPLETE")
+        registerReceiver(taskCompleteReceiver, filter)
     }
 
     override fun onPause() {
         super.onPause()
         isReturningFromBackground = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (settingsDialog?.isShowing == true) {
+            settingsDialog?.dismiss()
+        }
+        if (addItemDialog?.isShowing == true) {
+            addItemDialog?.dismiss()
+        }
+        if (aboutDialog?.isShowing == true) {
+            aboutDialog?.dismiss()
+        }
+        //settingsDialog?.dismiss()
+        //addItemDialog?.dismiss()
+        //aboutDialog?.dismiss()
+        //passwordProblem = true
+        unregisterReceiver(taskCompleteReceiver)
     }
 
     //override fun onStop() {

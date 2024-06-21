@@ -5,6 +5,7 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -78,10 +79,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
 
     fun compUpdate(id:Long , comp : Boolean){
         database?.toDoListDao()?.compUpdate(id, comp)
-        database?.toDoListDao()?.getAll().let {
-            getAllData = it as MutableList<ToDoListDataEntity>
-            //getPreviousList()
-        }
+        compUpdateNotify()
     }
 
     fun compUpdateNotify(){
@@ -177,6 +175,32 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
             //LocalDateTime.parse(it.date + " " + it.time, formatter).isAfter(LocalDateTime.now())
         }
         toDoList.value = filteredList
+    }
+
+    private fun parseDateAndTime(dateStr: String, timeStr: String): Calendar {
+        val cal = Calendar.getInstance()
+        val sdf = SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault())
+
+        // Предполагается, что dateStr и timeStr в формате "dd/MM/yy" и "HH:mm"
+        val date = sdf.parse("$dateStr $timeStr") ?: return cal // Возвращает текущий календарь, если разбор не удался
+
+        cal.time = date
+
+        return cal
+    }
+
+    fun setAllAlarm(){
+        database?.toDoListDao()?.getAll()?.forEach() {
+            val cal = parseDateAndTime(it.date, it.time)
+            setAlarm(cal, 0, it.id, it.title,it.desc,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE))
+        }
+    }
+
+    fun cancelAllAlarm(){
+        database?.toDoListDao()?.getAll()?.forEach() {
+            val cal = parseDateAndTime(it.date, it.time)
+            setAlarm(cal, 1, it.id, it.title,it.desc,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE))
+        }
     }
 
     fun delete(id: Long) {
