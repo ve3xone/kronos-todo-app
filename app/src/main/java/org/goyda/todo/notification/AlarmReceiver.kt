@@ -39,11 +39,18 @@ class AlarmReceiver : BroadcastReceiver() {
         val icon = R.drawable.ic_notify
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel =
-                NotificationChannel(dbId.toString(), "$GROUP_MESSAGE Notifications", NotificationManager.IMPORTANCE_MAX)
-            notificationChannel.description = GROUP_MESSAGE
-            notificationChannel.enableVibration(false)
-            notificationManager.createNotificationChannel(notificationChannel)
+            val existingChannel = notificationManager.getNotificationChannel("0")
+            if (existingChannel == null) {
+                val notificationChannel =
+                    NotificationChannel(
+                        "0",
+                        "$GROUP_MESSAGE Notifications",
+                        NotificationManager.IMPORTANCE_MAX
+                    )
+                notificationChannel.description = GROUP_MESSAGE
+                notificationChannel.enableVibration(false)
+                notificationManager.createNotificationChannel(notificationChannel)
+            }
         }
 
         val completeIntent = Intent(context, CompleteActionReceiver::class.java).apply {
@@ -55,7 +62,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         val completePendingIntent = PendingIntent.getBroadcast(context, dbId.toInt(), completeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(context, dbId.toString())
+        val notification = NotificationCompat.Builder(context, "0")
             .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(time)
@@ -71,7 +78,7 @@ class AlarmReceiver : BroadcastReceiver() {
             if (!task.comp && task.title == title && task.desc == desc && "${task.date} ${task.time}" == time) {
                 notificationManager.notify(dbId.toInt(), notification)
                 toDoListDatabase!!.toDoListDao().isShownUpdate(id = dbId, isShow = 1)
-                Log.d("IsRead", "isRead ${task.isShow}")
+                Log.d("IsRead", "isRead 1")
             }
         }
     }
