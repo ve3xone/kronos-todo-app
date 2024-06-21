@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
+import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
 @Database(entities = arrayOf(ToDoListDataEntity::class), version = 1)
@@ -25,8 +26,8 @@ abstract class ToDoListDatabase : RoomDatabase()
         fun getInstance(context: Context, passwordUser: String): ToDoListDatabase? {
             //if (instanse == null) {
                 synchronized(ToDoListDatabase::class) {
-                    val passphrase: ByteArray = SQLiteDatabase.getBytes(base64ToMD5(passwordApp).toCharArray()+
-                                                                              base64ToMD5(stringToBase64(passwordUser)).toCharArray())
+                    val passphrase: ByteArray = sha256(passwordApp) +
+                                                sha256(stringToBase64(passwordUser))
                     val factory = SupportFactory(passphrase)
                     instanse = Room.databaseBuilder(context.applicationContext,
                         ToDoListDatabase::class.java, "todo-db")
@@ -42,11 +43,9 @@ abstract class ToDoListDatabase : RoomDatabase()
             return Base64.encodeToString(input.toByteArray(), Base64.DEFAULT).trim()
         }
 
-        private fun base64ToMD5(base64String: String): String {
-            val bytes = base64String.toByteArray()
-            val md = MessageDigest.getInstance("MD5")
-            val digest = md.digest(bytes)
-            return digest.joinToString("") { "%02x".format(it) }
+        private fun sha256(input: String): ByteArray {
+            val md = MessageDigest.getInstance("SHA-256")
+            return md.digest(input.toByteArray(StandardCharsets.UTF_8))
         }
     }
 }
