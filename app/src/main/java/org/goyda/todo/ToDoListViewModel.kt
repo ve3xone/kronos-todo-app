@@ -1,5 +1,6 @@
 package org.goyda.todo
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
@@ -88,28 +89,51 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     @WorkerThread
     fun addData(title: String, desc: String, date: String, time: String, id: Long) {
         //database?.toDoListDao()?.insert(ToDoListDataEntity(title = title, date = date, time = time))
         if (position != -1)
         {
             val oldId = database?.toDoListDao()?.update(title = title, desc = desc, date = date, time = time, id = id)
-            val cal : Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+            //val cal : Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
 
-            cal.set(Calendar.MONTH, month)
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.DAY_OF_MONTH, day)
+            // Парсинг даты
+            val dateFormat = SimpleDateFormat("dd/M/yyyy")
+            val dateString = dateFormat.parse(date)
 
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.HOUR_OF_DAY, hour)
-            cal.set(Calendar.MINUTE, minute)
+            // Парсинг времени
+            val timeFormat = SimpleDateFormat("HH:mm")
+            val timeString = timeFormat.parse(time)
 
-            Log.d("Alarm Title","$month , $date : ${cal.time}")
+            // Объединение даты и времени в один объект Calendar
+            val calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+            calendar.time = dateString
+            calendar.set(Calendar.HOUR_OF_DAY, timeString.hours)
+            calendar.set(Calendar.MINUTE, timeString.minutes)
+            calendar.set(Calendar.SECOND, 0) // обнуляем секунды, если они не нужны
+
+            month = calendar.get(Calendar.MONTH)
+            year = calendar.get(Calendar.YEAR)
+            day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            hour = calendar.get(Calendar.HOUR_OF_DAY)
+            minute = calendar.get(Calendar.MINUTE)
+
+            //cal.set(Calendar.MONTH, month)
+            //cal.set(Calendar.YEAR, year)
+            //cal.set(Calendar.DAY_OF_MONTH, day)
+
+            //cal.set(Calendar.SECOND, 0);
+            //cal.set(Calendar.HOUR_OF_DAY, hour)
+            //cal.set(Calendar.MINUTE, minute)
+
+            Log.d("Alarm Title","$month , $date : ${calendar.time}")
             oldId?.let {
-                setAlarm(cal, 1, id, title,desc,hour,minute)
+                setAlarm(calendar, 1, id, title,desc,hour,minute)
             }
             oldId?.let {
-                setAlarm(cal, 0, id, title,desc,hour,minute)
+                setAlarm(calendar, 0, id, title,desc,hour,minute)
             }
         }
         else
@@ -244,8 +268,9 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
         intent.putExtra("date",  calender.get(Calendar.DAY_OF_MONTH).toString() + "/" +
                                              (calender.get(Calendar.MONTH).toInt() + 1).toString() + "/" +
                                              calender.get(Calendar.YEAR).toString() + " " +
-                                             calender.get(Calendar.HOUR_OF_DAY).toString()+ ":" +
+                                             String.format("%02d", calender.get(Calendar.HOUR_OF_DAY))+ ":" +
                                              String.format("%02d", calender.get(Calendar.MINUTE)))
+        //Log.d("Alarm Title","$month , $date : ${ca.time}")
         intent.putExtra("pass", pass)
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
