@@ -39,4 +39,5 @@
     <string name="sourcecode">Исходный код</string>
     <string name="license">Лицензия</string>
     <string name="about">О приложении</string>
+    <string name="EntAllFdata">Введите данные задачи до конца</string>
 </resources>

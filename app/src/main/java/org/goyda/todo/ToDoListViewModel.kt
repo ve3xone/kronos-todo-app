@@ -73,7 +73,7 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
             date.set("")
             time.set("")
         }else{
-            Toast.makeText(context,"Enter All Filed data",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,context.getString(R.string.EntAllFdata),Toast.LENGTH_SHORT).show()
         }
     }
 
