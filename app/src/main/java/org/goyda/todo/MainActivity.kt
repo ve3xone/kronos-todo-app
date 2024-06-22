@@ -533,7 +533,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
         dialogView.bAddAndEditList.setOnClickListener {
             viewModel.click(it)
-            addItemDialog?.dismiss()
+            if (!viewModel.Error)
+                addItemDialog?.dismiss()
         }
 
         dialogView.bCancel.setOnClickListener { addItemDialog?.dismiss() }

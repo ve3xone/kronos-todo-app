@@ -65,15 +65,19 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
     var position: Int = -1
     var index: Long = -1
 
+    var Error: Boolean = false
+
     fun click(v: View) {
         Log.d("Click", "click")
         if (title.get().toString().isNotBlank() && desc.get().toString().isNotBlank() && date.get().toString().isNotBlank() && time.get().toString().isNotBlank()) {
             addData(title.get().toString(), desc.get().toString(), date.get().toString(), time.get().toString(), id = index)
+            Error = false
             title.set("")
             desc.set("")
             date.set("")
             time.set("")
         }else{
+            Error = true
             Toast.makeText(context,context.getString(R.string.EntAllFdata),Toast.LENGTH_SHORT).show()
         }
     }
