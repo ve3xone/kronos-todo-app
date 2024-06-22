@@ -1,5 +1,5 @@
 
-# TODO List App with Notifications 
+# Kronos 
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-orange)
 ![Room Database](https://img.shields.io/badge/Room%20Database-blue)
