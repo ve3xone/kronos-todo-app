@@ -65,7 +65,7 @@ Main:
     - [x] Swipes between tabs
 - [x] English translation
 - [x] Make it as [designed](https://raw.githubusercontent.com/ve3xone/kronos-todo-app/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.png) ([jam](https://github.com/ve3xone/kronos-todo-app/raw/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D1%83%D1%85%D0%B0.jam)).
-    - Krch icons and design in general can not get the design because of the jam figma so I'm waiting for icons and that's it
+    - icons and design in general can not get the design because of the jam figma so I'm waiting for icons and that's it
         - As a result, it was decided not to take the designer's design because he made in figma jam....
             - Maximum only icons will take ...
 
