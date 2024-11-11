@@ -18,7 +18,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppThemeSystem">
-        <activity android:name="org.goyda.todo.MainActivity">
+        <activity android:name="org.goyda.todo.MainActivity"
+                  android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
