@@ -60,7 +60,7 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra("desc", desc)
             putExtra("date", time)
         }
-        val completePendingIntent = PendingIntent.getBroadcast(context, dbId.toInt(), completeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val completePendingIntent = PendingIntent.getBroadcast(context, dbId.toInt(), completeIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // PendingIntent.FLAG_UPDATE_CURRENT
 
         val notification = NotificationCompat.Builder(context, "0")
             .setSmallIcon(icon)
