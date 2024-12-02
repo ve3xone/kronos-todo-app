@@ -1,11 +1,18 @@
+<div style="display: flex; justify-content: center; align-items: center; height: 28vh;">
+    <div style="width: 150px; height: 150px; overflow: hidden; position: relative;">
+        <img src="https://github.com/ve3xone/kronos-todo-app/blob/main/%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD-%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD/icon_app.png?raw=true" style="width: 100%; height: auto; transform: scale(2); object-fit: cover;">
+    </div>
+</div>
 
-# Кронос (Kronos)
+# <p style="text-align: center;">Кронос (Kronos)</p>
 
-![Kotlin](https://img.shields.io/badge/Kotlin-orange)
-![Room Database](https://img.shields.io/badge/Room%20Database-blue)
-![Android Notifications](https://img.shields.io/badge/Notifications-Yes-blue)
-![Privacy](https://img.shields.io/badge/Privacy-Yes-blue)
-![Safety](https://img.shields.io/badge/Safety-Yes-blue)
+<p style="text-align: center;">
+  <img src="https://img.shields.io/badge/Kotlin-orange">
+  <img src="https://img.shields.io/badge/Room%20Database-blue">
+  <img src="https://img.shields.io/badge/Notifications-Yes-blue">
+  <img src="https://img.shields.io/badge/Privacy-Yes-blue">
+  <img src="https://img.shields.io/badge/Safety-Yes-blue">
+</p>
 
 Это простое приложение Todo (tasks manager), разработанное на Kotlin, которое использует библиотеку Room Database для управления задачами. Он также включает в себя функцию уведомления, чтобы напоминать пользователям о задачах в определенные даты и время.
 
