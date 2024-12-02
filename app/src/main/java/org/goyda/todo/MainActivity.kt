@@ -35,6 +35,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Parcelable
 import android.text.InputType
 import android.text.Spannable
@@ -50,10 +51,12 @@ import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.about.view.bOk
+//import kotlinx.android.synthetic.main.about.view.bOk
 import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -154,6 +157,14 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             WindowManager.LayoutParams.FLAG_SECURE
         )
 
+        // Запрос на уведомления для Android 13 и выше
+        if (Build.VERSION.SDK_INT >= 33) {
+            checkNotificationPermission()
+        } //else {
+            // Для более старых версий Android разрешение не требуется
+            //createNotificationChannel()
+        //}
+
         switchTheme(getSavedTheme())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -180,6 +191,40 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         //Разрешить работу в фоне (уведомления)
         disableBatteryOptimization(this)
     }
+
+    private fun checkNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, "android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+            // Разрешение не предоставлено, запрашиваем его
+            ActivityCompat.requestPermissions(this, arrayOf("android.permission.POST_NOTIFICATIONS"), 100)
+        } //else {
+            // Разрешение уже предоставлено
+            //createNotificationChannel()
+        //}
+    }
+
+    //private fun createNotificationChannel() {
+    //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    //        val channel = NotificationChannel("YOUR_CHANNEL_ID", "Channel Name", NotificationManager.IMPORTANCE_DEFAULT).apply {
+    //            description = "Channel Description"
+    //        }
+    //        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    //        notificationManager.createNotificationChannel(channel)
+    //    }
+    //}
+
+    //override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    //    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    //    if (requestCode == 100) {
+    //        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // Разрешение предоставлено
+                //createNotificationChannel()
+    //        } else {
+                // Разрешение отклонено, можно направить пользователя в настройки
+                // Например, показать диалог или уведомление
+                // Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+    //        }
+    //    }
+    //}
 
     private var dialogView = false
     private var password = ""
