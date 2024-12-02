@@ -277,7 +277,10 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
                                              String.format("%02d", calender.get(Calendar.MINUTE)))
         //Log.d("Alarm Title","$month , $date : ${ca.time}")
         intent.putExtra("pass", pass)
-        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(context, id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) //PendingIntent.FLAG_UPDATE_CURRENT
+        val pandingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, id.toInt(), intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            ) //PendingIntent.FLAG_UPDATE_CURRENT
 
         if (i == 0)
         {
