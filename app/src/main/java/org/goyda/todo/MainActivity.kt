@@ -55,6 +55,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.tabs.TabLayout
 //import kotlinx.android.synthetic.main.about.view.bOk
 import java.io.*
@@ -878,6 +883,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     private var aboutDialog: AlertDialog? = null
+    private lateinit var pieChart: PieChart
 
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -936,6 +942,34 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     0
                 }
                 labelTaskEfficiencyValue.text = "$efficiency %"
+
+                pieChart = dialogView.findViewById<PieChart>(R.id.pieChart)
+
+                // Создание данных для диаграммы
+                val completedTasks = statistics["completed"] ?: 0
+                val notCompletedTasks = statistics["notCompleted"] ?: 0
+
+                val pieEntries = ArrayList<PieEntry>()
+                pieEntries.add(PieEntry(completedTasks.toFloat(), "Completed"))
+                pieEntries.add(PieEntry(notCompletedTasks.toFloat(), "Not Completed"))
+
+                // Создание набора данных
+                val pieDataSet = PieDataSet(pieEntries, "")
+                pieDataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+
+                // Создание объекта данных
+                val pieData = PieData(pieDataSet)
+
+                // Установка данных в диаграмму
+                pieChart.data = pieData
+
+                // Настройка описания
+                //pieChart.description.isEnabled = false // Отключение описания
+                pieChart.description.text = "Task Completion Overview"
+                pieChart.description.textSize = 16f // Размер шрифта
+                pieChart.description.textColor = Color.BLACK // Цвет текста
+
+                pieChart.invalidate() // Обновление диаграммы
 
                 dialogView.findViewById<View>(R.id.bOk).setOnClickListener { dialog.dismiss() }
 
