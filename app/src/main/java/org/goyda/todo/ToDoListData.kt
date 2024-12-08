@@ -7,5 +7,5 @@ class ToDoListData(
     val date: String = "",
     val time: String = "",
     val isShow : Int = 0,
-    val comp: Boolean = false
+    var comp: Boolean = false
 )

@@ -134,12 +134,11 @@ class MainActivity : AppCompatActivity(), OnItemClick {
             if (viewModel.isAuthenticated){
                 //val dbId = intent?.getLongExtra("id", -1) ?: -1
                 viewModel.compUpdateNotify()
-                if (!viewModel.isOpenActiveTask){
+                if (!viewModel.isOpenActiveTask)
                     if (etSearch.text.toString() != "")
                         viewModel.filterListByTitleAndDesc(etSearch.text.toString())
                     else
                         viewModel.getPreviousList()
-                }
                 else
                     if (etSearch.text.toString() != "")
                         viewModel.filterListByTitleAndDesc(etSearch.text.toString())
@@ -954,6 +953,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         if (v.id == R.id.checkBoxComplete) {
             val item = list[position]
             viewModel.compUpdate(item.indexDb,!item.comp)
+            item.comp = !item.comp
             if (viewModel.isOpenActiveTask){
                 if (etSearch.text.toString() != "")
                     viewModel.filterListByTitleAndDesc(etSearch.text.toString())
@@ -961,7 +961,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                     viewModel.getPreviousList()
             }
             else
-                listAdapter.notifyItemChanged(viewModel.position)
+                listAdapter.notifyItemChanged(position)
             isOpenCheckBoxComplete = true
             return
         }
