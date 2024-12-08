@@ -173,6 +173,18 @@ class ToDoListViewModel(val context: Application) : AndroidViewModel(context) {
             filterListByActiveTask()
     }
 
+    fun getTaskStatistics(): Map<String, Int> {
+        val totalTasks = database?.toDoListDao()?.getTotalTasks() ?: 0
+        val completedTasks = database?.toDoListDao()?.getCompletedTasks() ?: 0
+        val notCompletedTasks = database?.toDoListDao()?.getNotCompletedTasks() ?: 0
+
+        return mapOf(
+            "total" to totalTasks,
+            "completed" to completedTasks,
+            "notCompleted" to notCompletedTasks
+        )
+    }
+
     fun clearList() {
         toDoList.value = emptyList()
     }

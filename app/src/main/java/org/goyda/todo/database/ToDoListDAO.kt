@@ -32,4 +32,13 @@ interface ToDoListDAO {
 
     @Query("SELECT * from todolist where id Like :id")
     fun get(id : Long): ToDoListDataEntity
+    
+    @Query("SELECT COUNT(*) FROM todolist")
+    fun getTotalTasks(): Int
+
+    @Query("SELECT COUNT(*) FROM todolist WHERE comp = 1")
+    fun getCompletedTasks(): Int
+
+    @Query("SELECT COUNT(*) FROM todolist WHERE comp = 0")
+    fun getNotCompletedTasks(): Int
 }
