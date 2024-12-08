@@ -1058,6 +1058,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         //aboutDialog?.dismiss()
         //passwordProblem = true
         unregisterReceiver(taskCompleteReceiver)
+        viewModel.isAuthenticated = false
     }
 
     //override fun onStop() {
