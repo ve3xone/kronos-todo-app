@@ -919,7 +919,6 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 val dialogView = layoutInflater.inflate(R.layout.stat, null)
                 builder.setView(dialogView)
                 val dialog = builder.create()
-                aboutDialog = dialog
                 dialog.show()
 
                 // Fetch statistics
