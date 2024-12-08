@@ -43,4 +43,9 @@
     <string name="ok">OK</string>
     <string name="about">About</string>
     <string name="EntAllFdata">Enter All Filed data</string>
+    <string name="stat">Statistics</string>
+    <string name="tasks_completed">Number of tasks completed</string>
+    <string name="tasks_not_completed">Number of tasks not completed</string>
+    <string name="tasks">Number of tasks</string>
+    <string name="tasks_efficiency">Performance (ratio of completed/uncompleted tasks)</string>
 </resources>
