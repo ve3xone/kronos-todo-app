@@ -880,6 +880,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private var aboutDialog: AlertDialog? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
@@ -903,6 +904,39 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 } catch (e: PackageManager.NameNotFoundException) {
                     versionLabel.text = "Неизвестная версия"
                 }
+
+                dialogView.findViewById<View>(R.id.bOk).setOnClickListener { dialog.dismiss() }
+
+                true
+            }
+            R.id.stats -> {
+                val builder = AlertDialog.Builder(this)
+                val dialogView = layoutInflater.inflate(R.layout.stat, null)
+                builder.setView(dialogView)
+                val dialog = builder.create()
+                aboutDialog = dialog
+                dialog.show()
+
+                // Fetch statistics
+                val statistics = viewModel.getTaskStatistics()
+
+                // Update the TextViews with the statistics
+                val labelTaskValue = dialogView.findViewById<TextView>(R.id.label_tasks_value)
+                labelTaskValue.text = statistics["total"].toString()
+
+                val labelTaskCompValue = dialogView.findViewById<TextView>(R.id.label_tasks_comp_value)
+                labelTaskCompValue.text = statistics["completed"].toString()
+
+                val labelTaskNotCompValue = dialogView.findViewById<TextView>(R.id.label_tasks_not_comp_value)
+                labelTaskNotCompValue.text = statistics["notCompleted"].toString()
+
+                val labelTaskEfficiencyValue = dialogView.findViewById<TextView>(R.id.label_tasks_efficiency_value)
+                val efficiency = if (statistics["total"] != 0) {
+                    (statistics["completed"]!!.toDouble() / statistics["total"]!! * 100).toInt()
+                } else {
+                    0
+                }
+                labelTaskEfficiencyValue.text = "$efficiency %"
 
                 dialogView.findViewById<View>(R.id.bOk).setOnClickListener { dialog.dismiss() }
 
