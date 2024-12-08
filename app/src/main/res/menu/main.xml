@@ -5,6 +5,13 @@
         tools:context=".MainActivity">
 
     <item
+            android:id="@+id/stats"
+            android:icon="@drawable/ic_stat_dark"
+            android:title="@string/stat"
+            app:showAsAction="always">
+    </item>
+
+    <item
             android:id="@+id/action_settings"
             android:icon="@drawable/ic_settings_dark"
             android:title="@string/settings"
