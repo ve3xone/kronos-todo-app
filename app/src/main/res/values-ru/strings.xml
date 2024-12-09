@@ -45,4 +45,7 @@
     <string name="tasks_not_completed">Кол-во не выполненных задач</string>
     <string name="tasks">Кол-во задач</string>
     <string name="tasks_efficiency">Результативность (соотy. выпол/невыпол задач)</string>
+    <string name="compd">Выполнено</string>
+    <string name="notcompd">Не выполнено</string>
+    <string name="taskcompoverview">Обзор выполнения задач</string>
 </resources>

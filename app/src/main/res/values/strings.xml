@@ -48,4 +48,7 @@
     <string name="tasks_not_completed">Number of tasks not completed</string>
     <string name="tasks">Number of tasks</string>
     <string name="tasks_efficiency">Performance (ratio of completed/uncompleted tasks)</string>
+    <string name="compd">Completed</string>
+    <string name="notcompd">Not Completed</string>
+    <string name="taskcompoverview">Task Completion Overview</string>
 </resources>
