@@ -949,8 +949,8 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 val notCompletedTasks = statistics["notCompleted"] ?: 0
 
                 val pieEntries = ArrayList<PieEntry>()
-                pieEntries.add(PieEntry(completedTasks.toFloat(), "Completed"))
-                pieEntries.add(PieEntry(notCompletedTasks.toFloat(), "Not Completed"))
+                pieEntries.add(PieEntry(completedTasks.toFloat(), getString(R.string.compd)))
+                pieEntries.add(PieEntry(notCompletedTasks.toFloat(), getString(R.string.notcompd)))
 
                 // Создание набора данных
                 val pieDataSet = PieDataSet(pieEntries, "")
@@ -964,7 +964,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
                 // Настройка описания
                 //pieChart.description.isEnabled = false // Отключение описания
-                pieChart.description.text = "Task Completion Overview"
+                pieChart.description.text = getString(R.string.taskcompoverview)
                 pieChart.description.textSize = 16f // Размер шрифта
                 pieChart.description.textColor = Color.BLACK // Цвет текста
 
