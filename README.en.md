@@ -1,9 +1,12 @@
+# <p align="center">Kronos</p>
 
-# Kronos 
-
-![Kotlin](https://img.shields.io/badge/Kotlin-orange)
-![Room Database](https://img.shields.io/badge/Room%20Database-blue)
-![Android Notifications](https://img.shields.io/badge/Notifications-Yes-green)
+<p align="center">
+  <img src="https://img.shields.io/badge/Kotlin-orange">
+  <img src="https://img.shields.io/badge/Room%20Database-blue">
+  <img src="https://img.shields.io/badge/Notifications-Yes-blue">
+  <img src="https://img.shields.io/badge/Privacy-Yes-blue">
+  <img src="https://img.shields.io/badge/Safety-Yes-blue">
+</p>
 
 This is a simple Todo (tasks manager) application developed in Kotlin that uses the Room Database library to manage tasks. It also includes a notification feature to remind users of tasks on specific dates and times.
 
@@ -69,7 +72,29 @@ Main:
         - As a result, it was decided not to take the designer's design because he made in figma jam....
             - Maximum only icons will take ...
 
-For the future, probably will not have time to realize:
-- [ ] Folders. (but I will try, most likely will not have time to realize, here just again to touch the database)
-- [ ] Multiple reminders for one task. (I probably won't have time to implement, I'll have to touch the DB again)
-- [ ] Subtasks. (probably won't have time to implement, just touching the DB again)
+Tasks for the 3rd semester (the most important and easiest are first):
+
+- [x] A bunch of different fixes to make the app work correctly on Android 13 and above.
+
+- [x] Statistics.
+    - This functionality should provide in a visual form statistics of using the application - the number of completed and unfinished tasks, the number of created and deleted tasks, performance (the ratio of completed/uncompleted tasks), etc.
+
+- Problematic in terms of UI:
+    - [ ] Task Folders.
+        - Grouping tasks into user-defined categories - folders.
+        - The user should be able to create a “folder” to which he/she can add tasks, when opening a “folder” only tasks added to it should be displayed.
+
+    - [ ] Multiple reminders.
+        - It should be possible to set multiple notifications for one task, the latest set notification should be taken as the task deadline.
+
+    - [ ] Subtasks.
+        - When creating or editing a task, I need to add a function to add a subtask with an option to mark it as “done” or “not done”.
+
+For the future, I probably won't have time to realize it:
+- [ ] Another idea about calendar, but there are also problems in UI too complicated and time-consuming.
+
+- The most problematic also in terms of UI (most likely I won't have time to finish it):
+    - [ ] Gradual updating of the application interface - implementation of the original design. In the course of testing the application we found out that the representatives of the target audience liked the original design of the product more, that's why we plan to restore it in the new version.
+
+- Not suitable due to privacy:
+    - [ ] Widget. The user should be able to quickly create a task via a widget on the desktop without having to log in to the application.
